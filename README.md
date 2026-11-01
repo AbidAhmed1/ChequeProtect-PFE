@@ -12,7 +12,7 @@ The platform was awarded **17.46/20 (Très Bien)** for the Graduation Project (P
 - 🤖 **AI Assistant Chatbot** — Integrated Groq LLAMA 3 model for automatic claim management.
 - 🔐 **KYC Module** — MTCNN & FaceNet512 biometric ID verification.
 
-🛠️ Technologies
+## 🛠️ Technologies
 
 - Java Spring Boot 3.5+ & FastAPI
 - Angular 21+ & Flutter
