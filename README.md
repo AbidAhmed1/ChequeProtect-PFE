@@ -72,8 +72,20 @@ ChequeProtect-PFE/
 │   ├── 📁 scripts/                  # Scripts utilitaires du backend
 │   ├── API_CONTRACT_MOBILE.md       # Spécification des APIs Mobile
 │   └── API_CONTRACT_WEB.md          # Spécification des APIs Web
-│
-└── 📁 Apipostman/                   # Collections Postman pour le test des APIs
 ```
 ## 🎯 Project Objective
 To automate manual banking verification processes, mitigate check fraud, and provide an enterprise-ready microservices architecture.
+
+## 👩‍💻 Authors
+
+This project was designed and developed as part of the Graduation Project (**PFE - Projet de Fin d'Études**) for the **Bachelor's Degree in Business Information Systems (BIS)**:
+
+* **Abid Ahmed** - 
+* **Raed Amri** -  
+
+---
+
+### 🎓 Academic & Professional Context
+* **Project Name:** ChequeProtect (TuniCheque)
+* **Degree:** Bachelor's Degree in Business Information Systems (Licence BIS)
+* **Objective:** Secure digitisation, verification, and automated fraud detection for banking cheques using Microservices architecture and Deep Learning.
