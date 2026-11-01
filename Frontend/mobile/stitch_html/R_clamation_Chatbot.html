@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Réclamations - ChequePro Assistant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#1f1635",
+                        "tertiary-container": "#c9a74d",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-surface-variant": "#494551",
+                        "secondary-container": "#e1d4fd",
+                        "outline-variant": "#cbc4d2",
+                        "surface-container-highest": "#e6e0e9",
+                        "primary-fixed": "#e9ddff",
+                        "on-tertiary-container": "#503d00",
+                        "surface-container": "#f2ecf4",
+                        "surface-dim": "#ded8e0",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "background": "#fdf7ff",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface": "#fdf7ff",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-variant": "#e6e0e9",
+                        "inverse-on-surface": "#f5eff7",
+                        "primary": "#4f378a",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "surface-container-low": "#f8f2fa",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-surface": "#1d1b20",
+                        "on-primary-fixed": "#22005d",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#7a7582",
+                        "on-tertiary-fixed": "#241a00",
+                        "inverse-primary": "#cfbcff",
+                        "secondary-fixed": "#e9ddff",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1d1b20",
+                        "secondary": "#63597c",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#645a7d",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "surface-bright": "#fdf7ff",
+                        "primary-container": "#6750a4",
+                        "tertiary": "#765b00",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#6750a4",
+                        "surface-container-high": "#ece6ee",
+                        "inverse-surface": "#322f35"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack_lg": "24px",
+                        "container_margin": "20px",
+                        "stack_sm": "8px",
+                        "card_padding": "24px",
+                        "stack_md": "16px",
+                        "section_gap": "16px"
+                    },
+                    "fontFamily": {
+                        "h3": ["Inter"],
+                        "h1": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h3": ["20px", { "lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600" }],
+                        "h1": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "h2": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(253, 247, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .message-incoming {
+            border-bottom-left-radius: 4px;
+        }
+        .message-outgoing {
+            border-bottom-right-radius: 4px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col antialiased">
+<!-- Top App Bar (Task-focused, so no global nav, just a back button and context) -->
+<header class="bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-xl docked full-width top-0 sticky border-b border-white/20 dark:border-white/10 shadow-[0_4px_20px_rgba(79,70,229,0.08)] flex justify-between items-center px-container_margin py-4 w-full z-50">
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-primary-fixed hover:bg-primary/5 dark:hover:bg-primary-fixed/10 transition-colors p-2 rounded-full scale-95 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold font-h3 text-h3">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<h1 class="font-h3 text-h3 font-bold text-primary dark:text-primary-fixed">ChequePro Assistant</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">En ligne</p>
+</div>
+</div>
+</div>
+<button class="text-primary dark:text-primary-fixed hover:bg-primary/5 dark:hover:bg-primary-fixed/10 transition-colors p-2 rounded-full scale-95 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<!-- Chat Canvas -->
+<main class="flex-grow flex flex-col px-container_margin py-stack_lg gap-stack_md overflow-y-auto bg-surface-container-lowest">
+<!-- Date Header -->
+<div class="flex justify-center my-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-variant px-3 py-1 rounded-full">Aujourd'hui</span>
+</div>
+<!-- Incoming Message -->
+<div class="flex flex-col gap-2 max-w-[85%] self-start">
+<div class="bg-surface-container-high text-on-surface font-body-md text-body-md p-4 rounded-2xl message-incoming shadow-sm">
+                Bonjour ! Je suis l'Assistant ChequePro. Je suis là pour vous aider à résoudre rapidement vos problèmes de chèques ou créer une réclamation.
+            </div>
+<span class="font-label-sm text-label-sm text-on-surface-variant ml-2">10:42</span>
+</div>
+<!-- Incoming Message 2 -->
+<div class="flex flex-col gap-2 max-w-[85%] self-start">
+<div class="bg-surface-container-high text-on-surface font-body-md text-body-md p-4 rounded-2xl message-incoming shadow-sm">
+                Pourriez-vous m'indiquer la nature de votre problème parmi les options ci-dessous ?
+            </div>
+<span class="font-label-sm text-label-sm text-on-surface-variant ml-2">10:42</span>
+</div>
+<!-- Quick Reply Chips -->
+<div class="flex flex-wrap gap-2 mt-2">
+<button class="bg-transparent border border-outline text-primary hover:bg-primary/5 font-label-md text-label-md px-4 py-2 rounded-full transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">search</span>
+                Chèque perdu
+            </button>
+<button class="bg-transparent border border-outline text-primary hover:bg-primary/5 font-label-md text-label-md px-4 py-2 rounded-full transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">edit_note</span>
+                Erreur de montant
+            </button>
+<button class="bg-transparent border border-outline text-primary hover:bg-primary/5 font-label-md text-label-md px-4 py-2 rounded-full transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">error</span>
+                Chèque rejeté
+            </button>
+<button class="bg-transparent border border-outline text-primary hover:bg-primary/5 font-label-md text-label-md px-4 py-2 rounded-full transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">more_horiz</span>
+                Autre
+            </button>
+</div>
+</main>
+<!-- Input Area -->
+<div class="bg-surface/70 backdrop-blur-xl border-t border-outline-variant p-4 w-full z-40 shrink-0 pb-safe shadow-[0_-4px_20px_rgba(79,70,229,0.05)]">
+<div class="flex items-end gap-3 max-w-4xl mx-auto">
+<button class="text-primary hover:bg-primary/10 p-3 rounded-full transition-colors shrink-0">
+<span class="material-symbols-outlined">add_photo_alternate</span>
+</button>
+<div class="flex-grow bg-surface-container-highest rounded-2xl border border-outline-variant focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all flex items-center px-4 py-2 min-h-[48px]">
+<textarea class="w-full bg-transparent border-none p-0 focus:ring-0 resize-none font-body-md text-body-md text-on-surface placeholder-on-surface-variant" placeholder="Écrivez votre message ici..." rows="1"></textarea>
+</div>
+<button class="bg-primary hover:bg-primary-fixed-variant text-on-primary p-3 rounded-full transition-colors shrink-0 shadow-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+</body></html>

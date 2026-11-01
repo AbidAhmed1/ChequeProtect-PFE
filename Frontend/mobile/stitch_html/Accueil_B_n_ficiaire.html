@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#1f1635",
+                    "surface-variant": "#e6e0e9",
+                    "surface": "#fdf7ff",
+                    "on-secondary-container": "#645a7d",
+                    "outline-variant": "#cbc4d2",
+                    "surface-tint": "#6750a4",
+                    "primary-fixed": "#e9ddff",
+                    "secondary-fixed": "#e9ddff",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "tertiary-fixed": "#ffdf93",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#f2ecf4",
+                    "on-secondary": "#ffffff",
+                    "primary": "#4f378a",
+                    "error": "#ba1a1a",
+                    "inverse-on-surface": "#f5eff7",
+                    "secondary": "#63597c",
+                    "on-primary-container": "#e0d2ff",
+                    "surface-bright": "#fdf7ff",
+                    "primary-container": "#6750a4",
+                    "secondary-container": "#e1d4fd",
+                    "outline": "#7a7582",
+                    "on-background": "#1d1b20",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#494551",
+                    "on-tertiary-container": "#503d00",
+                    "on-tertiary-fixed": "#241a00",
+                    "inverse-surface": "#322f35",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "inverse-primary": "#cfbcff",
+                    "on-surface": "#1d1b20",
+                    "primary-fixed-dim": "#cfbcff",
+                    "background": "#fdf7ff",
+                    "tertiary": "#765b00",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "surface-dim": "#ded8e0",
+                    "tertiary-container": "#c9a74d",
+                    "surface-container-high": "#ece6ee",
+                    "on-primary-fixed": "#22005d",
+                    "surface-container-highest": "#e6e0e9",
+                    "surface-container-low": "#f8f2fa",
+                    "on-tertiary-fixed-variant": "#594400"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "card_padding": "24px",
+                    "container_margin": "20px",
+                    "stack_lg": "24px",
+                    "stack_sm": "8px",
+                    "stack_md": "16px",
+                    "section_gap": "16px"
+            },
+            "fontFamily": {
+                    "h1": ["Inter"],
+                    "label-md": ["Inter"],
+                    "h2": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "h3": ["Inter"]
+            },
+            "fontSize": {
+                    "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(253, 247, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .blue-gradient {
+            background: linear-gradient(135deg, #4f378a 0%, #6750a4 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-md text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface/70 backdrop-blur-xl border-b border-white/20 shadow-[0_4px_20px_rgba(79,70,229,0.08)] docked full-width top-0 sticky flex justify-between items-center px-container_margin py-4 w-full z-50">
+<div class="flex items-center gap-stack_md">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a middle-aged businessman named Jean, smiling confidently. He is in a brightly lit modern office setting with soft natural light filtering through glass windows. The aesthetic is clean, corporate, and high-end, using a soft color palette of whites and deep purples to match the financial app's brand identity. The focus is sharp on his friendly expression, conveying security and reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjexxdfyW_cZNWCM1-93xoBrnvVB7yPEj_E0hK_yRGO7MrFZ3Xn1PH4clQF8dbj9v6xa6MQqNkzkDqVzqChAest1XtjyjOSXhGGyLoOxwdo4VafpbwkLmTa5aLsQw_YIyGYi-tB2gZw6_oF-_8ASTqWb3Dkv51oQFjEmNG3cbtHG8X0utsBiCP3DMaS_8gKX4zJBhyiNrxQSVzeZzox9yL5zKz7Ua6LowsjkBvI_gfZgT4E22FeWAJsdou1DcJtmL0YWEsOXlVmdk"/>
+</div>
+<h1 class="font-h3 text-h3 text-primary">Bonjour, Jean</h1>
+</div>
+<div class="relative hover:bg-primary/5 transition-colors p-2 rounded-full cursor-pointer transition-transform duration-200 active:scale-90">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface"></span>
+</div>
+</header>
+<main class="flex-grow px-container_margin py-stack_lg flex flex-col gap-section_gap max-w-2xl mx-auto w-full">
+<!-- Total Encaissé Bento Card -->
+<section class="glass-panel rounded-xl p-card_padding shadow-[0_4px_20px_rgba(79,70,229,0.08)] flex flex-col gap-stack_sm relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-8xl" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total encaissé</p>
+<div class="flex items-baseline gap-2">
+<span class="font-h1 text-h1 text-primary">12 450,00</span>
+<span class="font-h2 text-h2 text-primary-container">€</span>
+</div>
+<div class="mt-stack_md flex items-center gap-2 text-tertiary">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span class="font-label-md text-label-md">+12% ce mois-ci</span>
+</div>
+</section>
+<!-- Primary Action -->
+<button class="blue-gradient text-on-primary w-full py-5 rounded-xl shadow-lg flex items-center justify-center gap-stack_md transition-transform duration-200 active:scale-95 group">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-12 transition-transform" data-icon="photo_camera" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+<span class="font-h3 text-h3 font-bold tracking-tight uppercase">DÉPOSER UN CHÈQUE</span>
+</button>
+<!-- Secondary Actions Grid -->
+<div class="grid grid-cols-2 gap-stack_md">
+<button class="glass-panel flex flex-col items-center justify-center gap-stack_sm p-card_padding rounded-xl shadow-sm hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="history_edu">history_edu</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Suivi Dépôts</span>
+</button>
+<button class="glass-panel flex flex-col items-center justify-center gap-stack_sm p-card_padding rounded-xl shadow-sm hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="person">person</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Mon Profil</span>
+</button>
+</div>
+<!-- Recent Activity Placeholder -->
+<div class="mt-stack_md">
+<h2 class="font-h3 text-h3 text-on-surface mb-stack_md px-1">Derniers chèques</h2>
+<div class="flex flex-col gap-stack_sm">
+<div class="glass-panel p-stack_md rounded-xl flex justify-between items-center border border-outline-variant/30">
+<div class="flex items-center gap-stack_md">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="payments">payments</span>
+</div>
+<div>
+<p class="font-body-md font-semibold">Prestation Logistique</p>
+<p class="font-label-sm text-on-surface-variant">Il y a 2 heures</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-md font-bold text-primary">850,00 €</p>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container/30 text-on-tertiary-container font-label-sm">En cours</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell (NavigationDrawer Logic integrated into Footer) -->
+<footer class="bg-surface/70 backdrop-blur-xl border-t border-white/20 shadow-[0_-4px_20px_rgba(79,70,229,0.05)] sticky bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe">
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl p-2 transition-all scale-110">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Accueil</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-secondary-container p-2 hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label-sm text-label-sm">Chèques</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-secondary-container p-2 hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+<span class="font-label-sm text-label-sm">Espaces</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-secondary-container p-2 hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-sm text-label-sm">Quitter</span>
+</button>
+</footer>
+<!-- FAB for quick action (Optional but common in this UI) -->
+<button class="fixed bottom-24 right-6 w-14 h-14 blue-gradient text-on-primary rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</body></html>

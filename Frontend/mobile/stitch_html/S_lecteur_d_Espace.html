@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#1f1635",
+                        "surface-variant": "#e6e0e9",
+                        "surface": "#fdf7ff",
+                        "on-secondary-container": "#645a7d",
+                        "outline-variant": "#cbc4d2",
+                        "surface-tint": "#6750a4",
+                        "primary-fixed": "#e9ddff",
+                        "secondary-fixed": "#e9ddff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f2ecf4",
+                        "on-secondary": "#ffffff",
+                        "primary": "#4f378a",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f5eff7",
+                        "secondary": "#63597c",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-bright": "#fdf7ff",
+                        "primary-container": "#6750a4",
+                        "secondary-container": "#e1d4fd",
+                        "outline": "#7a7582",
+                        "on-background": "#1d1b20",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#494551",
+                        "on-tertiary-container": "#503d00",
+                        "on-tertiary-fixed": "#241a00",
+                        "inverse-surface": "#322f35",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "inverse-primary": "#cfbcff",
+                        "on-surface": "#1d1b20",
+                        "primary-fixed-dim": "#cfbcff",
+                        "background": "#fdf7ff",
+                        "tertiary": "#765b00",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface-dim": "#ded8e0",
+                        "tertiary-container": "#c9a74d",
+                        "surface-container-high": "#ece6ee",
+                        "on-primary-fixed": "#22005d",
+                        "surface-container-highest": "#e6e0e9",
+                        "surface-container-low": "#f8f2fa",
+                        "on-tertiary-fixed-variant": "#594400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card_padding": "24px",
+                        "container_margin": "20px",
+                        "stack_lg": "24px",
+                        "stack_sm": "8px",
+                        "stack_md": "16px",
+                        "section_gap": "16px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "label-md": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "h3": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.08);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #4f378a 0%, #6750a4 100%);
+        }
+        .blue-subtle-gradient {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(233, 221, 255, 0.3) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md">
+<!-- Hero/Header Section -->
+<header class="w-full px-container_margin pt-12 pb-8 text-center">
+<div class="mb-4 inline-flex items-center justify-center p-4 bg-primary-fixed rounded-full">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<h1 class="font-h1 text-h1 text-primary mb-2">Choisissez votre espace</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md mx-auto">
+            Accédez à votre plateforme de gestion de chèques sécurisée.
+        </p>
+</header>
+<!-- Main Content: Role Cards -->
+<main class="flex-grow w-full max-w-5xl mx-auto px-container_margin pb-20">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack_lg">
+<!-- Card 1: Titulaire -->
+<div class="glass-card blue-subtle-gradient rounded-[24px] p-card_padding flex flex-col items-center text-center cursor-pointer group active:scale-95 transition-all duration-200 border-outline-variant/30">
+<div class="mb-6 relative w-full aspect-video rounded-xl overflow-hidden shadow-inner bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A professional person in a modern bright office holding a premium fountain pen over a stack of high-quality financial documents. The atmosphere is sophisticated and clean, using a light-mode aesthetic with soft indigo and white tones. Natural daylight streams through large windows, creating soft shadows and a sense of luxury and security in a corporate environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFCK3SMVYa5ng_En7TYfCVSDVN3eNpTcJIFiVsIZMFw5O7d0J4MHJAg1F3oDntPqeqJeQ-1gi6s3d05L5niWdGcfj2GmVwH0ra0BQuTcS6DKcZrtF8Q2n0msaNAL7rKsNl3ubH8hzNwfeqcSge6SIboRktV5L0OP_vRbEqqtIy2qn4D9FqJHaO8Cy1Pe7gPqB4fmtJns5CnHJa1jMGo4tU-HWnxonchCJT01drEL-VBlb7HBk2sfe6piq6KArs3jT4uDjUanSVZqQ"/>
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="w-16 h-16 bg-primary-container rounded-2xl flex items-center justify-center mb-stack_md shadow-sm">
+<span class="material-symbols-outlined text-on-primary-container text-4xl" data-icon="person">person</span>
+</div>
+<h2 class="font-h2 text-h2 text-primary mb-stack_sm">Espace Titulaire</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-stack_lg px-4">
+                    Je donne des chèques et je gère mon carnet de manière fluide.
+                </p>
+<div class="mt-auto flex items-center justify-center w-12 h-12 rounded-full border border-primary text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Card 2: Bénéficiaire -->
+<div class="glass-card blue-subtle-gradient rounded-[24px] p-card_padding flex flex-col items-center text-center cursor-pointer group active:scale-95 transition-all duration-200 border-outline-variant/30">
+<div class="mb-6 relative w-full aspect-video rounded-xl overflow-hidden shadow-inner bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A close-up shot of hands using a high-end mobile device to scan a financial document in a minimalist, bright interior. The scene is illuminated with professional high-key lighting, featuring a palette of pristine whites and soft blue accents. The focus is on the precision and ease of digital check deposition, evoking a sense of modern efficiency and financial clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMH-k1s-1LZfVzsWSyM8qPdcJPm_Yw2a7xGUGf4GKcmqrsMZy2-Eiaj7h10LY8vaStJ1RF1SZR2VS_bpUho9aRmpKx-RdrvgdVuwJ0-Wv4UPwJ9ytqTwSLCQf1Y9QJ45wSOUMW6D72TuJ2zCspSNRa7kTDlqF4V4p4cuBOcM1LUcpIpuPIeuxTWTtuj6AWl1pi5hdKevawUhIB_MPM-4kMLFnkuJ8AfbQklVDXCqUeNalGkbgdqDXL9vJ6A2_vRTURjte6s3dIXY0"/>
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="w-16 h-16 bg-secondary-container rounded-2xl flex items-center justify-center mb-stack_md shadow-sm">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl" data-icon="account_balance">account_balance</span>
+</div>
+<h2 class="font-h2 text-h2 text-primary mb-stack_sm">Espace Bénéficiaire</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-stack_lg px-4">
+                    Je reçois et dépose des chèques directement via mon application.
+                </p>
+<div class="mt-auto flex items-center justify-center w-12 h-12 rounded-full border border-primary text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Security Information -->
+<footer class="w-full py-8 px-container_margin">
+<div class="max-w-md mx-auto flex flex-col items-center">
+<div class="flex items-center gap-2 text-on-surface-variant/60 font-label-sm mb-4">
+<span class="material-symbols-outlined text-[18px]" data-icon="lock">lock</span>
+<span>Cryptage SSL 256 bits • Connexion sécurisée</span>
+</div>
+<div class="w-1/3 h-[1px] bg-outline-variant/30 mb-4"></div>
+<p class="text-on-surface-variant/40 text-center font-label-sm uppercase tracking-widest">
+                Banque Digitale Premium © 2024
+            </p>
+</div>
+</footer>
+</body></html>

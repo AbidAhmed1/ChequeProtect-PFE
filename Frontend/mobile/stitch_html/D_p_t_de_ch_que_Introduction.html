@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Déposer un chèque</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-secondary-fixed": "#1f1635",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "outline-variant": "#cbc4d2",
+                        "primary": "#4f378a",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-background": "#1d1b20",
+                        "secondary": "#63597c",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-tertiary-container": "#503d00",
+                        "on-error-container": "#93000a",
+                        "background": "#fdf7ff",
+                        "inverse-on-surface": "#f5eff7",
+                        "surface-container-low": "#f8f2fa",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface-tint": "#6750a4",
+                        "inverse-surface": "#322f35",
+                        "surface-bright": "#fdf7ff",
+                        "secondary-container": "#e1d4fd",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "tertiary-container": "#c9a74d",
+                        "surface-variant": "#e6e0e9",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#e0d2ff",
+                        "tertiary": "#765b00",
+                        "outline": "#7a7582",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container-high": "#ece6ee",
+                        "secondary-fixed": "#e9ddff",
+                        "on-secondary-container": "#645a7d",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#494551",
+                        "on-surface": "#1d1b20",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e6e0e9",
+                        "surface-container": "#f2ecf4",
+                        "surface": "#fdf7ff",
+                        "inverse-primary": "#cfbcff",
+                        "on-primary-fixed": "#22005d",
+                        "surface-dim": "#ded8e0",
+                        "primary-fixed": "#e9ddff",
+                        "primary-container": "#6750a4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section_gap": "16px",
+                        "stack_sm": "8px",
+                        "stack_md": "16px",
+                        "card_padding": "24px",
+                        "stack_lg": "24px",
+                        "container_margin": "20px"
+                    },
+                    "fontFamily": {
+                        "h2": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "h3": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h2": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "h1": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h3": ["20px", { "lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #fdf7ff; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background min-h-screen flex flex-col font-body-md pb-24">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-container_margin py-4 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-white/20 shadow-[0_4px_20px_rgba(79,70,229,0.08)] docked full-width top-0 sticky">
+<button class="text-on-surface-variant scale-95 active:scale-90 transition-transform duration-200 hover:bg-primary/5 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-h3 text-h3 font-bold text-primary">Déposer un chèque</h1>
+<div class="w-10"></div> <!-- Placeholder for balance -->
+</header>
+<!-- Main Content -->
+<main class="flex-grow px-container_margin py-stack_lg flex flex-col gap-section_gap">
+<!-- Steps Section -->
+<section class="glass-panel p-card_padding rounded-[24px] shadow-[0_4px_20px_rgba(79,70,229,0.08)]">
+<h2 class="font-h3 text-h3 text-primary mb-stack_md">Étapes de dépôt</h2>
+<div class="flex flex-col gap-stack_sm">
+<div class="flex items-center gap-stack_md">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm">1</div>
+<span class="font-body-md text-on-surface">Préparez votre chèque</span>
+</div>
+<div class="w-[2px] h-4 bg-outline-variant ml-4"></div>
+<div class="flex items-center gap-stack_md opacity-70">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-label-sm">2</div>
+<span class="font-body-md text-on-surface">Capturez le recto</span>
+</div>
+<div class="w-[2px] h-4 bg-outline-variant ml-4"></div>
+<div class="flex items-center gap-stack_md opacity-70">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-label-sm">3</div>
+<span class="font-body-md text-on-surface">Capturez le verso</span>
+</div>
+</div>
+</section>
+<!-- Viewfinder Placeholder -->
+<section class="flex-grow flex flex-col items-center justify-center mt-stack_lg mb-stack_lg">
+<div class="relative w-full max-w-[320px] aspect-[2/1] rounded-[24px] border-2 border-dashed border-primary/50 bg-primary/5 flex flex-col items-center justify-center cursor-pointer scale-95 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined text-[48px] text-primary mb-2" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+<span class="font-label-md text-primary text-center px-4">Appuyez pour scanner le recto</span>
+<!-- Viewfinder corners -->
+<div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-[24px]"></div>
+<div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-[24px]"></div>
+<div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-[24px]"></div>
+<div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-[24px]"></div>
+</div>
+</section>
+<!-- Guidance Text -->
+<section class="text-center px-4 mb-stack_lg">
+<p class="font-body-md text-on-surface-variant flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-secondary text-sm">info</span>
+                Placez le chèque sur une surface plane et bien éclairée pour une meilleure reconnaissance.
+            </p>
+</section>
+<!-- Action Button -->
+<div class="mt-auto pb-4">
+<button class="w-full bg-gradient-to-r from-primary to-primary-container text-white py-4 rounded-xl font-h3 text-h3 shadow-lg hover:shadow-xl transition-all duration-300 scale-95 active:scale-90">
+                Commencer la capture
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface/70 backdrop-blur-xl border-t border-white/20 shadow-[0_-4px_20px_rgba(79,70,229,0.05)] docked full-width bottom-0 rounded-t-xl md:hidden">
+<a class="flex flex-col items-center justify-center text-on-secondary-container p-2 hover:bg-surface-variant transition-all scale-110 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm mt-1">Accueil</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl p-2 hover:bg-surface-variant transition-all scale-110 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-sm text-label-sm mt-1 font-bold">Chèques</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary-container p-2 hover:bg-surface-variant transition-all scale-110 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">photo_camera</span>
+<span class="font-label-sm text-label-sm mt-1">Scanner</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary-container p-2 hover:bg-surface-variant transition-all scale-110 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm mt-1">Paramètres</span>
+</a>
+</nav>
+</body></html>

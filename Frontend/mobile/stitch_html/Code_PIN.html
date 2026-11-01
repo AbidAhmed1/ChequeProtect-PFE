@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 9999px;
+            border: 2px solid #cbc4d2;
+            transition: all 0.2s ease;
+        }
+        .pin-dot.filled {
+            background-color: #4f378a;
+            border-color: #4f378a;
+            transform: scale(1.1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#1f1635",
+                        "surface-variant": "#e6e0e9",
+                        "surface": "#fdf7ff",
+                        "on-secondary-container": "#645a7d",
+                        "outline-variant": "#cbc4d2",
+                        "surface-tint": "#6750a4",
+                        "primary-fixed": "#e9ddff",
+                        "secondary-fixed": "#e9ddff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f2ecf4",
+                        "on-secondary": "#ffffff",
+                        "primary": "#4f378a",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f5eff7",
+                        "secondary": "#63597c",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-bright": "#fdf7ff",
+                        "primary-container": "#6750a4",
+                        "secondary-container": "#e1d4fd",
+                        "outline": "#7a7582",
+                        "on-background": "#1d1b20",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#494551",
+                        "on-tertiary-container": "#503d00",
+                        "on-tertiary-fixed": "#241a00",
+                        "inverse-surface": "#322f35",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "inverse-primary": "#cfbcff",
+                        "on-surface": "#1d1b20",
+                        "primary-fixed-dim": "#cfbcff",
+                        "background": "#fdf7ff",
+                        "tertiary": "#765b00",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface-dim": "#ded8e0",
+                        "tertiary-container": "#c9a74d",
+                        "surface-container-high": "#ece6ee",
+                        "on-primary-fixed": "#22005d",
+                        "surface-container-highest": "#e6e0e9",
+                        "surface-container-low": "#f8f2fa",
+                        "on-tertiary-fixed-variant": "#594400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card_padding": "24px",
+                        "container_margin": "20px",
+                        "stack_lg": "24px",
+                        "stack_sm": "8px",
+                        "stack_md": "16px",
+                        "section_gap": "16px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "label-md": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "h3": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen flex flex-col text-on-background">
+<!-- Top Navigation Header -->
+<header class="sticky top-0 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-white/20 px-container_margin py-4 flex justify-between items-center shadow-[0_4px_20px_rgba(79,70,229,0.08)]">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary/5 transition-colors active:scale-90">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">lock</span>
+<h1 class="font-h3 text-h3 text-primary">Sécurité</h1>
+</div>
+<div class="w-10"></div> <!-- Spacer for symmetry -->
+</header>
+<main class="flex-grow flex flex-col items-center justify-between px-container_margin py-stack_lg max-w-md mx-auto w-full">
+<!-- Instructional Header -->
+<section class="text-center mt-8">
+<h2 class="font-h2 text-h2 mb-2">Saisissez votre code PIN</h2>
+<p class="font-body-md text-on-surface-variant">Veuillez entrer votre code de sécurité à 6 chiffres pour accéder à votre espace titulaire.</p>
+</section>
+<!-- PIN Visualization Area -->
+<section class="flex flex-col items-center gap-stack_lg my-12">
+<div class="flex gap-4">
+<!-- Visualizing 6 dots, first 2 are "filled" for UI demonstration -->
+<div class="pin-dot filled"></div>
+<div class="pin-dot filled"></div>
+<div class="pin-dot"></div>
+<div class="pin-dot"></div>
+<div class="pin-dot"></div>
+<div class="pin-dot"></div>
+</div>
+<div class="h-6 flex items-center">
+<p class="font-label-sm text-error hidden">Code PIN incorrect. Veuillez réessayer.</p>
+</div>
+</section>
+<!-- Glassmorphism Keypad Container -->
+<section class="w-full glass-panel rounded-3xl p-6 shadow-xl mb-12">
+<div class="keypad-grid">
+<!-- Row 1 -->
+<button class="flex items-center justify-center aspect-square rounded-full font-h2 text-h2 text-primary hover:bg-primary/10 active:scale-95 transition-all">1</button>
+<button class="flex items-center justify-center aspect-square rounded-full font-h2 text-h2 text-primary hover:bg-primary/10 active:scale-95 transition-all">2</button>
+<button class="flex items-center justify-center aspect-square rounded-full font-h2 text-h2 text-primary hover:bg-primary/10 active:scale-95 transition-all">3</button>
+<!-- Row 2 -->
+<button class="flex items-center justify-center aspect-square rounded-full font-h2 text-h2 text-primary hover:bg-primary/10 active:scale-95 transition-all">4</button>
+<button class="flex items-center justify-center aspect-square rounded-full font-h2 text-h2 text-primary hover:bg-primary/10 active:scale-95 transition-all">5</button>
+<button class="flex items-center justify-center aspect-square rounded-full font-h2 text-h2 text-primary hover:bg-primary/10 active:scale-95 transition-all">6</button>
+<!-- Row 3 -->
+<button class="flex items-center justify-center aspect-square rounded-full font-h2 text-h2 text-primary hover:bg-primary/10 active:scale-95 transition-all">7</button>
+<button class="flex items-center justify-center aspect-square rounded-full font-h2 text-h2 text-primary hover:bg-primary/10 active:scale-95 transition-all">8</button>
+<button class="flex items-center justify-center aspect-square rounded-full font-h2 text-h2 text-primary hover:bg-primary/10 active:scale-95 transition-all">9</button>
+<!-- Row 4 -->
+<button class="flex items-center justify-center aspect-square rounded-full text-secondary hover:bg-secondary/10 active:scale-95 transition-all font-label-md">Effacer</button>
+<button class="flex items-center justify-center aspect-square rounded-full font-h2 text-h2 text-primary hover:bg-primary/10 active:scale-95 transition-all">0</button>
+<button class="flex items-center justify-center aspect-square rounded-full text-primary-container active:scale-95 transition-all">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">backspace</span>
+</button>
+</div>
+</section>
+<!-- Primary Action -->
+<section class="w-full pb-8">
+<button class="w-full py-4 px-6 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-h3 text-h3 shadow-lg active:scale-[0.98] transition-all">
+                Valider
+            </button>
+<p class="text-center mt-6 font-label-md text-on-surface-variant hover:text-primary cursor-pointer transition-colors">
+                Code oublié ?
+            </p>
+</section>
+</main>
+<!-- Visual Polish: Background Decoration -->
+<div class="fixed top-[-10%] left-[-10%] w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10"></div>
+<div class="fixed bottom-[-5%] right-[-5%] w-96 h-96 bg-secondary-container/10 rounded-full blur-3xl -z-10"></div>
+<!-- Background Contextual Image -->
+<div class="hidden">
+<img alt="Luxury Security Texture" data-alt="A macro shot of a sleek, brushed titanium surface reflecting soft ambient light from high-end corporate office surroundings. The scene is dominated by a clean, light-mode palette with subtle gradients of electric blue and silver. The atmosphere conveys absolute security, professional financial integrity, and a minimalist luxury aesthetic typical of modern high-stakes business environments. Lighting is soft and diffused, highlighting the texture and precision of the metallic surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoOghhVYRzk_pg2LpDqaaLXue82pM9w4tt9N7IqnDkccpehkRIBnI5eRcoux6PB5D54o09sgQNKkebXe_aY4dVxy0iB9m0ezqeMkmWEf8_kRAGGM3Yd8-QFJxQhh4MBnAtxHmIRg1veqa-7qcw3QskioAGwKn_cSSgGjBoCcydJ9B0EepXmpqVJYn54AIdSFsXqCF5KGgOMlOYSWah9bwoqOBTxRpTyT3pxfiMEROwItMNgs0TMLQefBC5fI-8MjRdEvrteMv9-Fw"/>
+</div>
+</body></html>
