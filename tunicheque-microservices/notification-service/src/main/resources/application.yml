@@ -1,0 +1,62 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: notification-service
+
+  # ── Base de données ──────────────────────────────────────────────
+  datasource:
+    url: jdbc:postgresql://localhost:5432/database_notifications
+    username: postgres
+    password: kmss-a5kK
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # ── Kafka ────────────────────────────────────────────────────────
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+
+  # ── Email SMTP Gmail ─────────────────────────────────────────────
+  # IMPORTANT : utiliser un "App Password" Gmail (pas le vrai mot de passe)
+  # Générer sur : myaccount.google.com → Sécurité → Mots de passe des applications
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: tunicheque@gmail.com
+    password: APP_PASSWORD_GMAIL
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 5000
+
+# ── URL auth-service (pour récupérer les emails) ──────────────────
+services:
+  auth-url: http://localhost:8081
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
+    filter: true
+
+# ── Logs ──────────────────────────────────────────────────────────
+logging:
+  level:
+    tn.tunicheque: INFO
+    org.springframework.kafka: WARN
+    org.springframework.mail: DEBUG
