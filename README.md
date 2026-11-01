@@ -12,13 +12,15 @@ The platform was awarded **17.46/20 (Très Bien)** for the Graduation Project (P
 - 🤖 **AI Assistant Chatbot** — Integrated Groq LLAMA 3 model for automatic claim management.
 - 🔐 **KYC Module** — MTCNN & FaceNet512 biometric ID verification.
 
-## 🛠️ Technologies
+🛠️ Technologies
+
 - Java Spring Boot 3.5+ & FastAPI
 - Angular 21+ & Flutter
 - YOLOv8, XGBoost, TensorFlow, OpenCV
 - Apache Kafka & PostgreSQL 16
 - Docker Compose & Spring Cloud API Gateway
-📂 Project Structure
+
+## 📂 Project Structure
 
 ```plaintext
 ChequeProtect-PFE/
@@ -72,6 +74,5 @@ ChequeProtect-PFE/
 │   └── API_CONTRACT_WEB.md          # Spécification des APIs Web
 │
 └── 📁 Apipostman/                   # Collections Postman pour le test des APIs
-
 ## 🎯 Project Objective
 To automate manual banking verification processes, mitigate check fraud, and provide an enterprise-ready microservices architecture.
