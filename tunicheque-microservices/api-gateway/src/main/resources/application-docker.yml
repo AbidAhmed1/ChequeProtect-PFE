@@ -1,0 +1,55 @@
+# Profil Docker — surcharge les localhost par les noms de services
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: http://auth-service:8081
+          predicates:
+            - Path=/api/auth/**
+
+        - id: cheque-service
+          uri: http://cheque-service:8082
+          predicates:
+            - Path=/api/cheques/**
+
+        - id: reclamation-service
+          uri: http://cheque-service:8082
+          predicates:
+            - Path=/api/reclamations/**
+
+        - id: notification-service
+          uri: http://notification-service:8085
+          predicates:
+            - Path=/api/notifications/**
+
+        - id: auth-service-docs
+          uri: http://auth-service:8081
+          predicates:
+            - Path=/v3/api-docs/auth
+          filters:
+            - RewritePath=/v3/api-docs/auth, /v3/api-docs
+
+        - id: cheque-service-docs
+          uri: http://cheque-service:8082
+          predicates:
+            - Path=/v3/api-docs/cheque
+          filters:
+            - RewritePath=/v3/api-docs/cheque, /v3/api-docs
+
+        - id: notification-service-docs
+          uri: http://notification-service:8085
+          predicates:
+            - Path=/v3/api-docs/notification
+          filters:
+            - RewritePath=/v3/api-docs/notification, /v3/api-docs
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4200"
+              - "http://localhost:80"
+            allowedMethods: ["*"]
+            allowedHeaders: ["*"]
+            allowCredentials: true

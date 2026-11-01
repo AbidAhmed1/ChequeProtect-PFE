@@ -1,0 +1,93 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  codec:
+    max-in-memory-size: 20MB
+  cloud:
+    gateway:
+      routes:
+        # ── API métier ──────────────────────────────────────────────
+        - id: auth-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/auth/**
+
+        - id: cheque-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/cheques/**
+
+        - id: reclamation-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/reclamations/**
+
+        - id: notification-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/notifications/**
+
+        # ── Proxy OpenAPI docs (pour Swagger agrégé) ────────────────
+        # Chaque route réécrit le path avant de passer au service
+        - id: auth-service-docs
+          uri: http://localhost:8081
+          predicates:
+            - Path=/v3/api-docs/auth
+          filters:
+            - RewritePath=/v3/api-docs/auth, /v3/api-docs
+
+        - id: cheque-service-docs
+          uri: http://localhost:8082
+          predicates:
+            - Path=/v3/api-docs/cheque
+          filters:
+            - RewritePath=/v3/api-docs/cheque, /v3/api-docs
+
+        - id: notification-service-docs
+          uri: http://localhost:8085
+          predicates:
+            - Path=/v3/api-docs/notification
+          filters:
+            - RewritePath=/v3/api-docs/notification, /v3/api-docs
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4200"
+              - "http://localhost:3000"
+            allowedMethods: ["*"]
+            allowedHeaders: ["*"]
+            allowCredentials: true
+
+jwt:
+  secret: TuniCheque_SuperSecret_2025_256bits_PFE_Key_MinLength32!
+
+# ── Swagger UI agrégé (accessible sur http://localhost:8080/swagger-ui.html) ──
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    # Menu déroulant "Select a definition" avec les 3 services
+    urls:
+      - name: "Auth Service (8081)"
+        url: /v3/api-docs/auth
+      - name: "Cheque Service (8082)"
+        url: /v3/api-docs/cheque
+      - name: "Notification Service (8085)"
+        url: /v3/api-docs/notification
+    urls-primary-name: "Auth Service (8081)"
+    disable-swagger-default-url: true
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
+    filter: true
+  # Le gateway lui-même n'expose pas de spec (pas d'API propre)
+  api-docs:
+    enabled: false
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
