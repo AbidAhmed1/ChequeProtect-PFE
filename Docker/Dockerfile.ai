@@ -1,0 +1,37 @@
+# Dockerfile pour le service IA FastAPI (TuniCheque AI Pipeline)
+# Python 3.11 — CUDA non requis (CPU inference)
+FROM python:3.11-slim
+
+# Dépendances système pour OpenCV, PaddleOCR, etc.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    libgl1 \
+    libglib2.0-0 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copie requirements séparément pour profiter du cache Docker
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir \
+        torch==2.5.1+cpu \
+        torchvision==0.20.1+cpu \
+        --extra-index-url https://download.pytorch.org/whl/cpu && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copie du code source (sans .venv, __pycache__, saved_models volumineux)
+COPY app/ ./app/
+COPY saved_models/ ./saved_models/
+COPY specimens/ ./specimens/
+COPY database_signatures/ ./database_signatures/
+COPY .env .env
+
+EXPOSE 8083
+
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8083", "--workers", "1"]

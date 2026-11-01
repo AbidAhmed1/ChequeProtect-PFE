@@ -1,0 +1,16 @@
+# Multi-stage build pour tous les microservices Spring Boot
+# Étape 1 : build Maven
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
+WORKDIR /build
+COPY pom.xml .
+# Télécharge les dépendances en cache séparé (layer stable)
+RUN mvn dependency:go-offline -B -q
+COPY src ./src
+RUN mvn package -DskipTests -B -q
+
+# Étape 2 : image runtime légère
+FROM eclipse-temurin:21-jre-alpine
+RUN apk add --no-cache curl
+WORKDIR /app
+COPY --from=builder /build/target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
