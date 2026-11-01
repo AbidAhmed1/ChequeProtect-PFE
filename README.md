@@ -1,5 +1,4 @@
-# ChequeProtect-PFE
-# ChèqueProtect — AI-Powered Check Processing System
+# ChequeProtect-PFE — AI-Powered Check Processing System
 
 ## 🛍️ Overview
 **ChèqueProtect** is an intelligent end-to-end system designed to modernize and secure Tunisian bank check processing using Web, Mobile, and Advanced AI techniques.
