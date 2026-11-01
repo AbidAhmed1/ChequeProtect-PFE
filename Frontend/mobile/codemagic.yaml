@@ -1,0 +1,57 @@
+workflows:
+  ios-unsigned:
+    name: iOS IPA for Sideloadly
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
+
+      - name: Pod install
+        script: cd ios && pod install
+
+      - name: Generate Flutter files
+        script: |
+          flutter build ios --release --no-codesign || true
+          flutter packages pub run build_runner build --delete-conflicting-outputs || true
+
+      - name: Build with xcodebuild (no signing)
+        script: |
+          set -e
+          xcodebuild build \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath $HOME/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            PROVISIONING_PROFILE_SPECIFIER=""
+
+      - name: Create IPA
+        script: |
+          set -e
+          APP=$(find $HOME/DerivedData -name "Runner.app" -path "*/Release-iphoneos/*" | head -1)
+          echo "App found: $APP"
+          ls -lah "$APP"
+          mkdir -p $CM_BUILD_DIR/output/Payload
+          cp -r "$APP" $CM_BUILD_DIR/output/Payload/
+          cd $CM_BUILD_DIR/output
+          zip -r ChequeProtect.ipa Payload
+          echo "IPA size: $(du -sh ChequeProtect.ipa)"
+
+    artifacts:
+      - output/ChequeProtect.ipa
+
+    publishing:
+      email:
+        recipients:
+          - ahmed.abid@esen.tn
+        notify:
+          success: true
+          failure: true
