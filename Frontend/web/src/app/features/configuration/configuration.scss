@@ -1,0 +1,223 @@
+.admin-profile-page {
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// ── Avatar banner ─────────────────────────────
+.avatar-banner {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.75rem 2rem;
+  flex-wrap: wrap;
+}
+
+.avatar-upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .55rem;
+  flex-shrink: 0;
+}
+
+.avatar-upload-wrap {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &:hover .avatar-overlay {
+    opacity: 1;
+  }
+}
+
+.avatar-img {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-initials {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .04em;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .52);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .3rem;
+  opacity: 0;
+  transition: opacity .2s;
+  color: #fff;
+
+  span {
+    font-size: .68rem;
+    font-weight: 600;
+  }
+}
+
+.remove-avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  background: none;
+  border: none;
+  font-size: .72rem;
+  color: var(--danger);
+  cursor: pointer;
+  padding: .2rem .5rem;
+  border-radius: var(--radius);
+  transition: var(--transition);
+
+  &:hover {
+    background: rgba(220, 38, 38, .08);
+  }
+}
+
+.avatar-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.avatar-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -.015em;
+}
+
+.avatar-email {
+  font-size: .85rem;
+  color: var(--text-muted);
+  margin-top: .15rem;
+}
+
+.avatar-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: .5rem;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+
+  svg { margin-top: .15rem; flex-shrink: 0; }
+
+  p {
+    font-size: .78rem;
+    line-height: 1.5;
+  }
+}
+
+// ── Two-column sections ───────────────────────
+.profile-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.section-card {
+  padding: 1.5rem;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  gap: .875rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: .2rem;
+}
+
+.section-sub {
+  font-size: .8rem;
+  color: var(--text-muted);
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.success-banner {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  background: var(--success-bg);
+  border: 1px solid rgba(5, 150, 105, .2);
+  color: var(--success);
+  padding: .7rem 1rem;
+  border-radius: var(--radius);
+  font-size: .825rem;
+  margin-bottom: 1.25rem;
+}
+
+.field-error {
+  font-size: .775rem;
+  color: var(--danger);
+  margin-top: .35rem;
+}
+
+// ── Responsive ────────────────────────────────
+@media (max-width: 800px) {
+  .profile-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .avatar-banner {
+    gap: 1.25rem;
+  }
+
+  .avatar-hint {
+    width: 100%;
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+}

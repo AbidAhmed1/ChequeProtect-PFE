@@ -1,0 +1,468 @@
+<div class="traitement-page">
+  <!-- Page header -->
+  <div class="page-header">
+    <div>
+      <p class="section-label">Validation OCR</p>
+      <h1 class="page-title">Traitement du chèque</h1>
+      <p class="page-subtitle">Vérifiez et corrigez les champs extraits par l'IA</p>
+    </div>
+    <!-- Confidence badge (shown once cheque is loaded) -->
+    <div *ngIf="cheque()" class="confidence-badge"
+      [class.high]="cheque()!.overallConfidence >= .85"
+      [class.medium]="cheque()!.overallConfidence >= .6 && cheque()!.overallConfidence < .85"
+      [class.low]="cheque()!.overallConfidence < .6">
+      Score OCR&nbsp;: {{ (cheque()!.overallConfidence * 100).toFixed(0) }}%
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-panel card" *ngIf="isLoading()">
+    <div class="spinner"></div>
+    <strong>Préparation du formulaire OCR</strong>
+    <span>Chargement des données extraites...</span>
+  </div>
+
+  <!-- Main layout (cheque loaded) -->
+  <div class="traitement-layout" *ngIf="!isLoading() && cheque()">
+
+    <!-- Left aside: cheque visual + field confidence -->
+    <aside class="cheque-aside card" style="padding:0;overflow:hidden">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border)">
+        <h3 style="font-size:.95rem;font-weight:600">Aperçu du chèque</h3>
+      </div>
+
+      <!-- Cheque images — chargées via HttpClient (JWT inclus) -->
+      <div class="cheque-images">
+        <div class="cheque-image-block" *ngIf="rectoUrl()">
+          <span class="cheque-image-label">Recto</span>
+          <img [src]="rectoUrl()!" class="cheque-real-image" alt="Recto du chèque" />
+        </div>
+        <div class="cheque-image-block" *ngIf="versoUrl()">
+          <span class="cheque-image-label">Verso</span>
+          <img [src]="versoUrl()!" class="cheque-real-image" alt="Verso du chèque" />
+        </div>
+        <div *ngIf="!rectoUrl()" class="cheque-image-placeholder">
+          <span>Chargement de l'image...</span>
+        </div>
+      </div>
+
+      <!-- Field confidence list -->
+      <div class="field-confidence-list">
+
+        <div class="field-confidence-item" [class.warning]="cheque()!.chequeNumber.confidence < 0.8">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+            <span style="font-size:.8rem;font-weight:500">N° chèque</span>
+            <span style="font-size:.75rem;font-weight:600"
+              [style.color]="cheque()!.chequeNumber.confidence >= .85 ? 'var(--success)' : cheque()!.chequeNumber.confidence >= .6 ? 'var(--warning)' : 'var(--danger)'">
+              {{ (cheque()!.chequeNumber.confidence * 100).toFixed(0) }}%
+            </span>
+          </div>
+          <div class="confidence-bar">
+            <div class="confidence-fill"
+              [class.high]="cheque()!.chequeNumber.confidence >= .85"
+              [class.medium]="cheque()!.chequeNumber.confidence >= .6 && cheque()!.chequeNumber.confidence < .85"
+              [class.low]="cheque()!.chequeNumber.confidence < .6"
+              [style.width.%]="cheque()!.chequeNumber.confidence * 100">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-confidence-item" [class.warning]="cheque()!.amountNumeric.confidence < 0.8">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+            <span style="font-size:.8rem;font-weight:500">Montant (chiffres)</span>
+            <span style="font-size:.75rem;font-weight:600"
+              [style.color]="cheque()!.amountNumeric.confidence >= .85 ? 'var(--success)' : cheque()!.amountNumeric.confidence >= .6 ? 'var(--warning)' : 'var(--danger)'">
+              {{ (cheque()!.amountNumeric.confidence * 100).toFixed(0) }}%
+            </span>
+          </div>
+          <div class="confidence-bar">
+            <div class="confidence-fill"
+              [class.high]="cheque()!.amountNumeric.confidence >= .85"
+              [class.medium]="cheque()!.amountNumeric.confidence >= .6 && cheque()!.amountNumeric.confidence < .85"
+              [class.low]="cheque()!.amountNumeric.confidence < .6"
+              [style.width.%]="cheque()!.amountNumeric.confidence * 100">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-confidence-item" [class.warning]="cheque()!.amountText.confidence < 0.8">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+            <span style="font-size:.8rem;font-weight:500">Montant (lettres)</span>
+            <span style="font-size:.75rem;font-weight:600"
+              [style.color]="cheque()!.amountText.confidence >= .85 ? 'var(--success)' : cheque()!.amountText.confidence >= .6 ? 'var(--warning)' : 'var(--danger)'">
+              {{ (cheque()!.amountText.confidence * 100).toFixed(0) }}%
+            </span>
+          </div>
+          <div class="confidence-bar">
+            <div class="confidence-fill"
+              [class.high]="cheque()!.amountText.confidence >= .85"
+              [class.medium]="cheque()!.amountText.confidence >= .6 && cheque()!.amountText.confidence < .85"
+              [class.low]="cheque()!.amountText.confidence < .6"
+              [style.width.%]="cheque()!.amountText.confidence * 100">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-confidence-item" [class.warning]="cheque()!.emitterName.confidence < 0.8">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+            <span style="font-size:.8rem;font-weight:500">Émetteur</span>
+            <span style="font-size:.75rem;font-weight:600"
+              [style.color]="cheque()!.emitterName.confidence >= .85 ? 'var(--success)' : cheque()!.emitterName.confidence >= .6 ? 'var(--warning)' : 'var(--danger)'">
+              {{ (cheque()!.emitterName.confidence * 100).toFixed(0) }}%
+            </span>
+          </div>
+          <div class="confidence-bar">
+            <div class="confidence-fill"
+              [class.high]="cheque()!.emitterName.confidence >= .85"
+              [class.medium]="cheque()!.emitterName.confidence >= .6 && cheque()!.emitterName.confidence < .85"
+              [class.low]="cheque()!.emitterName.confidence < .6"
+              [style.width.%]="cheque()!.emitterName.confidence * 100">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-confidence-item" [class.warning]="cheque()!.beneficiaryName.confidence < 0.8">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+            <span style="font-size:.8rem;font-weight:500">Bénéficiaire</span>
+            <span style="font-size:.75rem;font-weight:600"
+              [style.color]="cheque()!.beneficiaryName.confidence >= .85 ? 'var(--success)' : cheque()!.beneficiaryName.confidence >= .6 ? 'var(--warning)' : 'var(--danger)'">
+              {{ (cheque()!.beneficiaryName.confidence * 100).toFixed(0) }}%
+            </span>
+          </div>
+          <div class="confidence-bar">
+            <div class="confidence-fill"
+              [class.high]="cheque()!.beneficiaryName.confidence >= .85"
+              [class.medium]="cheque()!.beneficiaryName.confidence >= .6 && cheque()!.beneficiaryName.confidence < .85"
+              [class.low]="cheque()!.beneficiaryName.confidence < .6"
+              [style.width.%]="cheque()!.beneficiaryName.confidence * 100">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-confidence-item" [class.warning]="cheque()!.signatureValid.confidence < 0.8">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+            <span style="font-size:.8rem;font-weight:500">Signature</span>
+            <span style="font-size:.75rem;font-weight:600"
+              [style.color]="cheque()!.signatureValid.confidence >= .85 ? 'var(--success)' : cheque()!.signatureValid.confidence >= .6 ? 'var(--warning)' : 'var(--danger)'">
+              {{ (cheque()!.signatureValid.confidence * 100).toFixed(0) }}%
+            </span>
+          </div>
+          <div class="confidence-bar">
+            <div class="confidence-fill"
+              [class.high]="cheque()!.signatureValid.confidence >= .85"
+              [class.medium]="cheque()!.signatureValid.confidence >= .6 && cheque()!.signatureValid.confidence < .85"
+              [class.low]="cheque()!.signatureValid.confidence < .6"
+              [style.width.%]="cheque()!.signatureValid.confidence * 100">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Right: OCR form -->
+    <div class="ocr-form-area">
+      <div class="card" style="padding:1.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+          <h3 style="font-size:.95rem;font-weight:600">Données extraites</h3>
+          <div class="keyboard-hints">
+            <span class="kbd-hint"><kbd>Enter</kbd>&nbsp;Valider</span>
+            <span class="kbd-hint"><kbd>Esc</kbd>&nbsp;Rejeter</span>
+          </div>
+        </div>
+
+        <form [formGroup]="treatmentForm" (ngSubmit)="onSubmit()">
+          <div class="ocr-grid">
+
+            <div class="form-field">
+              <label>Numéro de chèque</label>
+              <input class="input-modern" formControlName="chequeNumber" [attr.disabled]="isSubmitting() ? true : null" />
+            </div>
+
+            <div class="form-field">
+              <label>Montant (chiffres)</label>
+              <input class="input-modern" formControlName="amountNumeric" type="number" [attr.disabled]="isSubmitting() ? true : null" />
+            </div>
+
+            <div class="form-field" style="grid-column:1/-1">
+              <label>Montant (lettres)</label>
+              <input class="input-modern" formControlName="amountText" [attr.disabled]="isSubmitting() ? true : null" />
+            </div>
+
+            <div class="form-field">
+              <label>Émetteur</label>
+              <input class="input-modern" formControlName="emitterName" [attr.disabled]="isSubmitting() ? true : null" />
+            </div>
+
+            <div class="form-field">
+              <label>Bénéficiaire</label>
+              <input class="input-modern" formControlName="beneficiaryName" [attr.disabled]="isSubmitting() ? true : null" />
+            </div>
+
+            <!-- Identification bénéficiaire : Individu (CIN) ou Société (RIB) -->
+            <div class="form-field" style="grid-column:1/-1">
+              <label class="label-manual">
+                Identification Bénéficiaire
+                <span class="badge-manual">Saisie manuelle</span>
+              </label>
+              <div class="beneficiaire-toggle">
+                <button type="button"
+                  class="toggle-btn"
+                  [class.active]="beneficiaireType() === 'individu'"
+                  (click)="beneficiaireType.set('individu')"
+                  [attr.disabled]="isSubmitting() ? true : null">
+                  Individu (CIN)
+                </button>
+                <button type="button"
+                  class="toggle-btn"
+                  [class.active]="beneficiaireType() === 'societe'"
+                  (click)="beneficiaireType.set('societe')"
+                  [attr.disabled]="isSubmitting() ? true : null">
+                  Société (RIB)
+                </button>
+              </div>
+
+              <input *ngIf="beneficiaireType() === 'individu'"
+                class="input-modern"
+                [value]="cinBeneficiaire()"
+                (input)="cinBeneficiaire.set($any($event.target).value)"
+                placeholder="Ex : 12345678"
+                maxlength="8"
+                [attr.disabled]="isSubmitting() ? true : null" />
+
+              <input *ngIf="beneficiaireType() === 'societe'"
+                class="input-modern"
+                [value]="ribBeneficiaire()"
+                (input)="ribBeneficiaire.set($any($event.target).value)"
+                placeholder="Ex : 09827635715243876354"
+                maxlength="20"
+                [attr.disabled]="isSubmitting() ? true : null" />
+
+              <span class="field-hint">Optionnel — permet d'envoyer une notification au bénéficiaire</span>
+            </div>
+
+            <div class="form-field">
+              <label>Date</label>
+              <input class="input-modern" formControlName="date" [attr.disabled]="isSubmitting() ? true : null" />
+            </div>
+
+            <div class="form-field">
+              <label>Banque</label>
+              <input class="input-modern" formControlName="bank" [attr.disabled]="isSubmitting() ? true : null" />
+            </div>
+
+            <div class="form-field" style="grid-column:1/-1">
+              <label>RIB</label>
+              <input class="input-modern" formControlName="rib" [attr.disabled]="isSubmitting() ? true : null" />
+            </div>
+
+            <div class="form-field" style="grid-column:1/-1">
+              <label class="signature-check-label">
+                <input type="checkbox" formControlName="signatureValid" style="width:16px;height:16px;accent-color:var(--primary)" />
+                Signature valide
+              </label>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <!-- Action bar -->
+      <div class="action-bar card" style="padding:1.25rem 1.5rem">
+        <button class="btn btn-danger" type="button"
+          (click)="onReject()"
+          [disabled]="isSubmitting() || showRejectPanel()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+          Rejeter le chèque
+        </button>
+        <div class="action-bar-hints" style="color:var(--text-muted);font-size:.8rem">
+          Utilisez&nbsp;<kbd class="kbd-inline">Enter</kbd>&nbsp;ou&nbsp;<kbd class="kbd-inline">Esc</kbd>
+        </div>
+        <button class="btn btn-pdf" type="button"
+          (click)="downloadRapportPdf()"
+          [disabled]="isDownloadingPdf() || isSubmitting()"
+          title="Télécharger le rapport PDF de ce chèque">
+          <span class="spinner-dark" *ngIf="isDownloadingPdf()"></span>
+          <svg *ngIf="!isDownloadingPdf()" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="12" y1="18" x2="12" y2="12"/>
+            <polyline points="9 15 12 18 15 15"/>
+          </svg>
+          {{ isDownloadingPdf() ? 'Génération...' : 'Rapport PDF' }}
+        </button>
+        <button class="btn btn-success" type="button"
+          (click)="onSubmit()"
+          [disabled]="isSubmitting() || showRejectPanel()">
+          <span class="spinner-dark" *ngIf="isSubmitting()"></span>
+          <svg *ngIf="!isSubmitting()" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ isSubmitting() ? 'Traitement...' : 'Valider le chèque' }}
+        </button>
+      </div>
+
+      <!-- Reject panel (shown when agent clicks Rejeter) -->
+      <div class="reject-panel card" *ngIf="showRejectPanel()">
+        <div class="reject-panel-header">
+          <div class="reject-panel-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="15" y1="9" x2="9" y2="15"/>
+              <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+          </div>
+          <div>
+            <p class="reject-panel-label">Confirmation requise</p>
+            <h4 class="reject-panel-title">Motif du rejet</h4>
+          </div>
+        </div>
+
+        <select class="input-modern select-reject"
+          [value]="rejectMotif()"
+          (change)="rejectMotif.set($any($event.target).value)">
+          <option value="">— Sélectionner un motif —</option>
+          <option *ngFor="let r of rejectReasons" [value]="r">{{ r }}</option>
+        </select>
+
+        <div class="reject-panel-actions">
+          <button class="btn btn-ghost" type="button" (click)="cancelReject()" [disabled]="isSubmitting()">
+            Annuler
+          </button>
+          <button class="btn btn-danger" type="button"
+            (click)="confirmReject()"
+            [disabled]="isSubmitting()">
+            <span class="spinner-dark" *ngIf="isSubmitting()"></span>
+            <svg *ngIf="!isSubmitting()" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            {{ isSubmitting() ? 'Traitement...' : 'Confirmer le rejet' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- QR Code panel -->
+      <div class="card qr-panel" *ngIf="cheque()">
+        <div class="qr-panel-header">
+          <div>
+            <p class="ai-phases-label">Conformité BCT</p>
+            <h3 class="ai-phases-title">Code QR pecc.tn</h3>
+          </div>
+          <span class="qr-badge" [class.qr-actif]="qrInfo()" [class.qr-inactif]="!qrInfo()">
+            {{ qrInfo() ? 'QR Actif' : 'QR Inactif' }}
+          </span>
+        </div>
+
+        <!-- QR trouvé : affichage des champs parsés -->
+        <div class="qr-fields" *ngIf="qrInfo() as qr">
+          <div class="qr-row">
+            <span class="qr-label">Bénéficiaire QR</span>
+            <span class="qr-val">{{ qr.beneficiaire || '—' }}</span>
+          </div>
+          <div class="qr-row">
+            <span class="qr-label">Montant BCT</span>
+            <span class="qr-val qr-montant">{{ qr.montant | number:'1.3-3' }} DT</span>
+          </div>
+          <div class="qr-row">
+            <span class="qr-label">N° chèque QR</span>
+            <span class="qr-val qr-mono">{{ qr.numeroCheque || '—' }}</span>
+          </div>
+          <div class="qr-row">
+            <span class="qr-label">RIB émetteur QR</span>
+            <span class="qr-val qr-mono">{{ qr.rib || '—' }}</span>
+          </div>
+          <div class="qr-row">
+            <span class="qr-label">Date validité</span>
+            <span class="qr-val">{{ qr.date || '—' }}</span>
+          </div>
+          <div class="qr-row">
+            <span class="qr-label">Série</span>
+            <span class="qr-val qr-mono">{{ qr.serie || '—' }}</span>
+          </div>
+          <div class="qr-row qr-raw-row">
+            <span class="qr-label">URL pecc.tn</span>
+            <span class="qr-val qr-raw">{{ qr.raw }}</span>
+          </div>
+        </div>
+
+        <!-- QR absent/illisible -->
+        <div class="qr-absent" *ngIf="!qrInfo()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>Code QR non détecté ou illisible sur ce chèque. Vérification manuelle requise.</span>
+        </div>
+      </div>
+
+      <!-- AI phases analysis -->
+      <div class="card ai-phases-card" *ngIf="aiPhases().length > 0">
+        <div class="ai-phases-header">
+          <div>
+            <p class="ai-phases-label">Analyse IA</p>
+            <h3 class="ai-phases-title">Résultats par phase</h3>
+          </div>
+          <div class="ai-phases-summary">
+            <span class="ai-summary-passed">{{ aiPhases().length }} phases</span>
+          </div>
+        </div>
+
+        <div class="ai-phases-grid">
+          <div class="phase-card"
+            *ngFor="let ph of aiPhases()"
+            [class.phase-passed]="ph.passed"
+            [class.phase-failed]="!ph.passed">
+
+            <!-- Phase header row -->
+            <div class="phase-top">
+              <span class="phase-num">{{ phaseOrder.indexOf(ph.phase) + 1 }}</span>
+              <div class="phase-info">
+                <span class="phase-name">{{ phaseLabel[ph.phase] || ph.phase }}</span>
+                <span class="phase-status" [class.status-pass]="ph.passed" [class.status-fail]="!ph.passed">
+                  {{ ph.passed ? '✓ Validé' : '✗ Échoué' }}
+                </span>
+              </div>
+              <span class="phase-pct"
+                [style.color]="ph.score >= .85 ? 'var(--success)' : ph.score >= .6 ? 'var(--warning)' : 'var(--danger)'">
+                {{ (ph.score * 100).toFixed(0) }}%
+              </span>
+            </div>
+
+            <!-- Score bar -->
+            <div class="phase-bar">
+              <div class="phase-bar-fill"
+                [class.high]="ph.score >= .85"
+                [class.medium]="ph.score >= .6 && ph.score < .85"
+                [class.low]="ph.score < .6"
+                [style.width.%]="ph.score * 100">
+              </div>
+            </div>
+
+            <!-- Decision + duration -->
+            <div class="phase-footer">
+              <span class="phase-decision">{{ decisionLabel(ph.decision) }}</span>
+              <span class="phase-duration" *ngIf="ph.durationMs">{{ ph.durationMs | number:'1.0-0' }} ms</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- No data state (not loading, no cheque) -->
+  <div class="card" style="padding:3rem;text-align:center" *ngIf="!isLoading() && !cheque()">
+    <div style="font-size:3rem;margin-bottom:1rem">📄</div>
+    <h3 style="margin-bottom:.5rem;font-size:1.1rem;font-weight:600">Aucun chèque à traiter</h3>
+    <p style="color:var(--text-muted);margin-bottom:1.5rem">Scannez d'abord un chèque pour continuer</p>
+    <a href="/scanner" class="btn btn-primary">Aller au scanner</a>
+  </div>
+
+</div>

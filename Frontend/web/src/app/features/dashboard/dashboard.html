@@ -1,0 +1,145 @@
+<div class="dashboard">
+  <!-- Page header -->
+  <div class="page-header">
+    <div>
+      <p class="section-label">Vue opérationnelle</p>
+      <h1 class="page-title">Tableau de bord</h1>
+      <p class="page-subtitle">{{ dateDuJour }}</p>
+    </div>
+  </div>
+
+  <!-- Stats grid -->
+  <section aria-label="Statistiques de traitement">
+  <div class="stats-grid">
+    <div class="stat-card accent-blue" role="article" aria-label="Chèques traités: {{ stats.traites.count }}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <p class="stat-label">Chèques traités</p>
+          <p class="stat-value">{{ stats.traites.count }}</p>
+        </div>
+        <div class="stat-icon-wrap blue">📋</div>
+      </div>
+      <div class="stat-trend positive">▲ {{ stats.traites.trend }} ce mois</div>
+    </div>
+
+    <div class="stat-card accent-green" role="article" aria-label="Validés: {{ stats.valides.count }}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <p class="stat-label">Validés</p>
+          <p class="stat-value" style="color:var(--success)">{{ stats.valides.count }}</p>
+        </div>
+        <div class="stat-icon-wrap green">✓</div>
+      </div>
+      <div class="stat-trend positive">▲ {{ stats.valides.trend }} ce mois</div>
+    </div>
+
+    <div class="stat-card accent-red" role="article" aria-label="Rejetés: {{ stats.rejetes.count }}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <p class="stat-label">Rejetés</p>
+          <p class="stat-value" style="color:var(--danger)">{{ stats.rejetes.count }}</p>
+        </div>
+        <div class="stat-icon-wrap red">✕</div>
+      </div>
+      <div class="stat-trend negative">▼ {{ stats.rejetes.trend }} ce mois</div>
+    </div>
+
+    <div class="stat-card accent-yellow" role="article" aria-label="En attente: {{ stats.attente.count }}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <p class="stat-label">En attente</p>
+          <p class="stat-value" style="color:var(--warning)">{{ stats.attente.count }}</p>
+        </div>
+        <div class="stat-icon-wrap yellow">⏳</div>
+      </div>
+      <div class="stat-trend neutral">{{ stats.attente.trend }} aujourd'hui</div>
+    </div>
+  </div>
+  </section>
+
+  <!-- Two-column content -->
+  <div class="dashboard-content">
+    <!-- Recent cheques -->
+    <div class="card" style="padding:0;overflow:hidden;flex:1">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <h2 style="font-size:1rem;font-weight:600;margin-bottom:.2rem">Chèques récents</h2>
+          <p style="font-size:.8rem;color:var(--text-muted)">Dernières transactions traitées</p>
+        </div>
+        <a href="/historique" class="btn btn-secondary btn-sm">Voir tout</a>
+      </div>
+      <div class="recent-list">
+        <div class="recent-item" *ngFor="let cheque of chequesRecents">
+          <div class="recent-avatar">{{ cheque.nom[0] || 'C' }}</div>
+          <div class="recent-info">
+            <span class="recent-name">{{ cheque.nom }}</span>
+            <span class="recent-date">{{ cheque.banque }} · {{ cheque.date }}</span>
+          </div>
+          <div class="recent-right">
+            <span class="recent-amount">{{ cheque.montant }}</span>
+            <span class="badge"
+              [class.badge-success]="cheque.cssClass === 'valide'"
+              [class.badge-warning]="cheque.cssClass === 'analyse'"
+              [class.badge-danger]="cheque.cssClass === 'fraude'">
+              {{ cheque.statut }}
+            </span>
+          </div>
+        </div>
+        <div *ngIf="!chequesRecents.length" style="padding:2rem;text-align:center;color:var(--text-muted)">
+          Aucun chèque traité récemment
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Performance panel -->
+    <div class="card" style="padding:1.5rem;width:300px;flex-shrink:0">
+      <h2 style="font-size:1rem;font-weight:600;margin-bottom:.3rem">Performance IA</h2>
+      <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1.5rem">Métriques en temps réel</p>
+
+      <div class="ai-score">
+        <span class="ai-score-value">{{ aiPerformance.globalScore }}%</span>
+        <span class="ai-score-label">Score global</span>
+      </div>
+
+      <div class="ai-metrics">
+        <div class="ai-metric" *ngFor="let item of aiPerformance.details">
+          <div style="display:flex;justify-content:space-between;font-size:.825rem;margin-bottom:.4rem">
+            <span [id]="'metric-' + item.label">{{ item.label }}</span>
+            <strong [style.color]="item.color">{{ item.score }}%</strong>
+          </div>
+          <div class="progress"
+               role="progressbar"
+               [attr.aria-valuenow]="item.score"
+               aria-valuemin="0"
+               aria-valuemax="100"
+               [attr.aria-labelledby]="'metric-' + item.label">
+            <div class="progress-fill" [style.width.%]="item.score" [style.background]="item.color"></div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="ai-stats">
+        <div class="ai-stat">
+          <span class="ai-stat-value">{{ aiPerformance.stats.tempsMoyen }}</span>
+          <span class="ai-stat-label">Temps moyen</span>
+        </div>
+        <div class="ai-stat">
+          <span class="ai-stat-value">{{ aiPerformance.stats.uptime }}</span>
+          <span class="ai-stat-label">Disponibilité</span>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem">
+        <a href="/scanner" class="btn btn-primary btn-full">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          Scanner un chèque
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

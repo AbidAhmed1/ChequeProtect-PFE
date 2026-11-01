@@ -1,0 +1,68 @@
+.usermgmt-page {
+  max-width: 1100px;
+}
+
+.user-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.status-dot-sm {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: .25rem;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Bannière alerte demandes reset MDP ─────────────────────── */
+.reset-alert-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 10px;
+  padding: .875rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: .875rem;
+  color: #92400e;
+
+  svg { flex-shrink: 0; margin-top: 1px; color: #d97706; }
+}
+
+/* ── Badge "MDP requis" sur ligne utilisateur ────────────────── */
+.reset-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+  font-size: .7rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+
+/* ── Ligne avec demande reset (fond légèrement coloré) ────────── */
+tr.row-reset-request td {
+  background: #fffef0;
+}
+
+@media (max-width: 640px) {
+  .user-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

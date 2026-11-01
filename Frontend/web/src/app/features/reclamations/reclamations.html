@@ -1,0 +1,109 @@
+<div class="recl-page">
+
+  <header class="recl-header">
+    <div>
+      <p class="micro-label">Administration</p>
+      <h1 class="page-title">Réclamations Clients</h1>
+      <p class="page-subtitle">Messages reçus via le chatbot mobile</p>
+    </div>
+    <button class="btn-refresh" (click)="load()" [disabled]="isLoading()">
+      <span [class.spinning]="isLoading()">↻</span> Actualiser
+    </button>
+  </header>
+
+  <!-- KPI chips -->
+  @if (!isLoading()) {
+    <div class="recl-kpis">
+      <div class="kpi-chip" [class.active]="filterStatut() === ''" (click)="setFilter('')">
+        <span class="kpi-num">{{ counts().total }}</span>
+        <span class="kpi-lbl">Total</span>
+      </div>
+      <div class="kpi-chip warning" [class.active]="filterStatut() === 'OUVERTE'" (click)="setFilter('OUVERTE')">
+        <span class="kpi-num">{{ counts().ouvertes }}</span>
+        <span class="kpi-lbl">Ouvertes</span>
+      </div>
+      <div class="kpi-chip blue" [class.active]="filterStatut() === 'EN_COURS'" (click)="setFilter('EN_COURS')">
+        <span class="kpi-num">{{ counts().enCours }}</span>
+        <span class="kpi-lbl">En cours</span>
+      </div>
+      <div class="kpi-chip purple" [class.active]="filterStatut() === 'TRANSMISE'" (click)="setFilter('TRANSMISE')">
+        <span class="kpi-num">{{ counts().transmises }}</span>
+        <span class="kpi-lbl">Traitées</span>
+      </div>
+      <div class="kpi-chip success" [class.active]="filterStatut() === 'RESOLUE'" (click)="setFilter('RESOLUE')">
+        <span class="kpi-num">{{ counts().resolues }}</span>
+        <span class="kpi-lbl">Résolues</span>
+      </div>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="loading-center">
+      <div class="spinner-lg"></div>
+      <p>Chargement des réclamations...</p>
+    </div>
+  } @else if (filtered().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">💬</div>
+      <p>Aucune réclamation {{ filterStatut() ? 'avec ce statut' : 'pour le moment' }}</p>
+      @if (filterStatut()) {
+        <button class="btn-link" (click)="setFilter('')">Voir toutes</button>
+      }
+    </div>
+  } @else {
+    <div class="recl-list">
+      @for (r of filtered(); track r.id) {
+        <div class="recl-card">
+
+          <div class="recl-card-top">
+            <div class="recl-meta">
+              <span class="recl-objet">{{ r.objet ?? 'Réclamation' }}</span>
+              <span class="recl-date">{{ formatDate(r.createdAt) }}</span>
+            </div>
+            <span class="status-badge" [class]="'status-' + r.statut.toLowerCase()">
+              {{ statutLabel(r.statut) }}
+            </span>
+          </div>
+
+          @if (r.description) {
+            <p class="recl-desc">{{ r.description }}</p>
+          }
+
+          <div class="recl-client">
+            @if (r.clientName && r.clientName !== '—') {
+              <span class="recl-client-name">{{ r.clientName }}</span>
+            }
+            @if (r.clientIdentifier && r.clientIdentifier !== '—') {
+              <span class="recl-client-id badge-{{ r.clientIdentifierType?.toLowerCase() }}">
+                {{ r.clientIdentifierType }} : {{ r.clientIdentifier }}
+              </span>
+            }
+          </div>
+
+          <div class="recl-footer">
+            <span class="recl-id">ID: {{ r.id.slice(0, 8) }}…</span>
+            @if (r.chequeId) {
+              <span class="recl-cheque">Chèque: {{ r.chequeId }}</span>
+            }
+            @if (canTransmit(r)) {
+              <button
+                class="btn-transmit"
+                [disabled]="transmitting() === r.id"
+                (click)="transmit(r.id)">
+                @if (transmitting() === r.id) {
+                  <span class="spinner-sm"></span>
+                } @else {
+                  📤
+                }
+                Envoyer
+              </button>
+            }
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

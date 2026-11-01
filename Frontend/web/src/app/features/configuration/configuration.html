@@ -1,0 +1,146 @@
+<div class="admin-profile-page">
+  <div class="page-header">
+    <div>
+      <p class="section-label">Administration</p>
+      <h1 class="page-title">Mon Profil</h1>
+      <p class="page-subtitle">Gérez vos informations personnelles et la sécurité de votre compte</p>
+    </div>
+  </div>
+
+  <!-- ── Avatar banner ──────────────────────────── -->
+  <div class="card avatar-banner">
+
+    <div class="avatar-upload-section">
+      <div class="avatar-upload-wrap" (click)="avatarInput.click()" title="Modifier la photo">
+        <img *ngIf="avatarPreview()" [src]="avatarPreview()!" class="avatar-img" alt="Photo de profil" />
+        <div *ngIf="!avatarPreview()" class="avatar-initials">
+          {{ currentUser()?.firstName?.[0] }}{{ currentUser()?.lastName?.[0] }}
+        </div>
+        <div class="avatar-overlay">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          <span>Modifier</span>
+        </div>
+      </div>
+      <input #avatarInput type="file" accept="image/*" style="display:none" (change)="onAvatarSelected($event)" />
+      <button *ngIf="avatarPreview()" class="remove-avatar-btn" type="button" (click)="removeAvatar()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        Supprimer
+      </button>
+    </div>
+
+    <div class="avatar-meta">
+      <h2 class="avatar-name">{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</h2>
+      <span class="badge badge-primary" style="width:fit-content">Administrateur</span>
+      <p class="avatar-email">{{ currentUser()?.email }}</p>
+    </div>
+
+
+  </div>
+
+  <!-- ── Profile + Password cards ──────────────── -->
+  <div class="profile-sections">
+
+    <!-- Personal info -->
+    <div class="card section-card">
+      <div class="section-head">
+        <div class="section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="section-title">Informations personnelles</h3>
+          <p class="section-sub">Nom, prénom et adresse e-mail de connexion</p>
+        </div>
+      </div>
+
+      <div class="success-banner" *ngIf="profileSuccess()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ profileSuccess() }}
+      </div>
+
+      <form [formGroup]="profileForm" style="display:flex;flex-direction:column;gap:1.1rem">
+        <div class="two-col">
+          <div class="form-field">
+            <label>Prénom</label>
+            <input class="input-modern" formControlName="firstName" type="text" placeholder="Prénom" />
+          </div>
+          <div class="form-field">
+            <label>Nom</label>
+            <input class="input-modern" formControlName="lastName" type="text" placeholder="Nom" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Adresse e-mail</label>
+          <input class="input-modern" formControlName="email" type="email" placeholder="admin@example.com" />
+        </div>
+        <div style="display:flex;justify-content:flex-end">
+          <button class="btn btn-primary" type="button" (click)="saveProfile()" [disabled]="isSavingProfile()">
+            <span class="spinner" *ngIf="isSavingProfile()"></span>
+            <svg *ngIf="!isSavingProfile()" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Password -->
+    <div class="card section-card">
+      <div class="section-head">
+        <div class="section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="section-title">Sécurité du compte</h3>
+          <p class="section-sub">Mettez à jour votre mot de passe régulièrement</p>
+        </div>
+      </div>
+
+      <div class="success-banner" *ngIf="passwordSuccess()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ passwordSuccess() }}
+      </div>
+
+      <form [formGroup]="passwordForm" style="display:flex;flex-direction:column;gap:1.1rem">
+        <div class="form-field">
+          <label>Mot de passe actuel</label>
+          <input class="input-modern" formControlName="currentPassword" type="password" placeholder="••••••••" />
+        </div>
+        <div class="form-field">
+          <label>Nouveau mot de passe</label>
+          <input class="input-modern" formControlName="newPassword" type="password" placeholder="••••••••" />
+        </div>
+        <div class="form-field">
+          <label>Confirmer le mot de passe</label>
+          <input class="input-modern" formControlName="confirmPassword" type="password" placeholder="••••••••" />
+          <div class="field-error" *ngIf="passwordMismatch">Les mots de passe ne correspondent pas</div>
+        </div>
+        <div style="display:flex;justify-content:flex-end">
+          <button class="btn btn-primary" type="button" (click)="updatePassword()" [disabled]="isSavingPassword()">
+            <span class="spinner" *ngIf="isSavingPassword()"></span>
+            <svg *ngIf="!isSavingPassword()" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Mettre à jour
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>

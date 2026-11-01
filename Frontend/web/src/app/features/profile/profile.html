@@ -1,0 +1,40 @@
+<div class="profile-page">
+  <div class="page-header">
+    <div>
+      <p class="section-label">Mon espace</p>
+      <h1 class="page-title">Profil utilisateur</h1>
+    </div>
+  </div>
+
+  <div class="profile-layout">
+    <!-- Profile sidebar card -->
+    <div class="profile-sidebar card" style="padding:2rem;text-align:center">
+      <div class="avatar avatar-xl" style="margin:0 auto 1.25rem;font-size:1.5rem"
+        [style.background]="user()?.role === 'ADMIN' ? '#7c3aed' : '#2563eb'">
+        {{ user()?.firstName?.[0] }}{{ user()?.lastName?.[0] }}
+      </div>
+      <h2 style="font-size:1.1rem;font-weight:700">{{ user()?.firstName }} {{ user()?.lastName }}</h2>
+      <p style="font-size:.85rem;color:var(--text-muted);margin:.3rem 0 .75rem">{{ user()?.email }}</p>
+      <span class="badge" [class.badge-primary]="user()?.role === 'ADMIN'" [class.badge-success]="user()?.role === 'AGENT'">
+        {{ user()?.role }}
+      </span>
+
+      <hr class="divider" style="margin:1.5rem 0">
+
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <span class="profile-stat-value">{{ user()?.isActive ? 'Actif' : 'Bloqué' }}</span>
+          <span class="profile-stat-label">Statut</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat-value">FR</span>
+          <span class="profile-stat-label">Langue</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main section -->
+    <div class="profile-main">
+    </div>
+  </div>
+</div>

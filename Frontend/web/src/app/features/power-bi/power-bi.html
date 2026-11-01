@@ -1,0 +1,388 @@
+<div class="pbi-view">
+
+  <!-- ── En-tête ──────────────────────────────────────────────────────────── -->
+  <header class="view-header">
+    <div class="title-block">
+      <h1>Perspectives Décisionnelles</h1>
+      <p class="subtitle">Business Intelligence · ETL · Data Mining prédictif</p>
+    </div>
+    <div class="header-actions">
+      @if (activeTab() === 'dashboard') {
+        <button class="btn-config" (click)="openConfig()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+          </svg>
+          Configurer rapport
+        </button>
+      }
+    </div>
+  </header>
+
+  <!-- ── Onglets ──────────────────────────────────────────────────────────── -->
+  <nav class="tab-nav">
+    <button class="tab-btn" [class.active]="activeTab() === 'dashboard'" (click)="setTab('dashboard')">
+      <span class="tab-icon">📊</span>
+      <span>Rapport Power BI</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'etl'" (click)="setTab('etl')">
+      <span class="tab-icon">🔄</span>
+      <span>Architecture ETL</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'mining'" (click)="setTab('mining')">
+      <span class="tab-icon">🤖</span>
+      <span>Modèles Prédictifs</span>
+    </button>
+  </nav>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       ONGLET 1 — RAPPORT POWER BI
+       ════════════════════════════════════════════════════════════════════════ -->
+  @if (activeTab() === 'dashboard') {
+
+    <!-- Modal de configuration -->
+    @if (showConfig()) {
+      <div class="config-overlay" (click)="cancelConfig()">
+        <div class="config-modal" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>Configurer le rapport Power BI</h3>
+            <button class="btn-close" (click)="cancelConfig()">✕</button>
+          </div>
+          <div class="modal-body">
+            <p class="modal-hint">
+              Collez ici l'URL obtenue via <strong>Fichier → Incorporer le rapport → Publier sur le web</strong>
+              dans Power BI Service.
+            </p>
+            <input
+              type="url"
+              class="url-input"
+              [(ngModel)]="tempUrl"
+              placeholder="https://app.powerbi.com/reportEmbed?reportId=..."
+            />
+          </div>
+          <div class="modal-footer">
+            @if (embedUrl()) {
+              <button class="btn-danger-sm" (click)="clearEmbed()">Supprimer le rapport</button>
+            }
+            <button class="btn-secondary" (click)="cancelConfig()">Annuler</button>
+            <button class="btn-primary" (click)="applyConfig()">Appliquer</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (safeUrl()) {
+      <!-- ── Rapport embarqué ──────────────────────────────────────────── -->
+      <div class="embed-container">
+        <iframe
+          [src]="safeUrl()!"
+          class="pbi-iframe"
+          allowfullscreen
+          title="Rapport Power BI ChèqueProtect"
+        ></iframe>
+      </div>
+    } @else {
+      <!-- ── Placeholder : guide de configuration ──────────────────────── -->
+      <div class="setup-guide">
+        <div class="guide-hero">
+          <div class="guide-logo">
+            <svg width="48" height="48" viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="6" fill="#F2C94C"/>
+              <rect x="4" y="18" width="6" height="10" rx="1" fill="#EB5757"/>
+              <rect x="13" y="12" width="6" height="16" rx="1" fill="#2563EB"/>
+              <rect x="22" y="6"  width="6" height="22" rx="1" fill="#10B981"/>
+            </svg>
+          </div>
+          <h2>Rapport Power BI non configuré</h2>
+          <p>Suivez les étapes ci-dessous pour intégrer votre rapport interactif en 5 minutes.</p>
+          <button class="btn-primary-lg" (click)="openConfig()">Configurer maintenant</button>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <strong>Exécuter l'ETL</strong>
+              <p>Lancer <code>python etl_export.py</code> pour générer les CSV dans <code>analytics/exports/</code></p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <strong>Power BI Desktop</strong>
+              <p>Obtenir les données → PostgreSQL → Schéma <code>analytics</code> ou importer les CSV</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <strong>Créer les visuels</strong>
+              <p>Volume 7 jours (barres empilées) · Taux validation (anneau) · Score IA (histogramme)</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <strong>Publier sur powerbi.com</strong>
+              <p>Fichier → Publier → choisir votre espace de travail</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <strong>Obtenir l'URL embed</strong>
+              <p>Rapport → Fichier → Incorporer le rapport → Publier sur le web → copier l'iframe src</p>
+            </div>
+          </div>
+          <div class="step-card highlight">
+            <div class="step-number">6</div>
+            <div class="step-content">
+              <strong>Coller l'URL ici</strong>
+              <p>Cliquer sur « Configurer maintenant » et coller l'URL pour activer le rapport</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visuels Power BI recommandés -->
+        <div class="recommended-visuals card-section">
+          <div class="section-header">
+            <span class="micro-label">VISUELS RECOMMANDÉS POUR VOTRE RAPPORT .PBIX</span>
+          </div>
+          <div class="visuals-grid">
+            @for (v of pbiVisuals; track v.title) {
+              <div class="visual-card">
+                <div class="visual-icon">{{ v.icon }}</div>
+                <strong>{{ v.title }}</strong>
+                <p>{{ v.desc }}</p>
+                <span class="visual-source">Source : <code>{{ v.source }}</code></span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       ONGLET 2 — ARCHITECTURE ETL
+       ════════════════════════════════════════════════════════════════════════ -->
+  @if (activeTab() === 'etl') {
+    <div class="etl-view">
+
+      <!-- Diagramme pipeline -->
+      <section class="etl-pipeline card-section">
+        <div class="section-header">
+          <span class="micro-label">PIPELINE ETL — FLUX DE DONNÉES VERS POWER BI</span>
+        </div>
+        <div class="pipeline-flow">
+          @for (step of etlPipeline; track step.step; let last = $last) {
+            <div class="pipeline-box" [style.background]="step.bg" [style.border-color]="step.border">
+              <div class="box-header" [style.color]="step.color">
+                <span class="box-icon">{{ step.icon }}</span>
+                <strong>{{ step.label }}</strong>
+              </div>
+              <ul class="box-items">
+                @for (item of step.items; track item) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+            @if (!last) {
+              <div class="pipeline-arrow">→</div>
+            }
+          }
+          <!-- Étape finale : embed Angular -->
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-box final-box">
+            <div class="box-header">
+              <span class="box-icon">🖥️</span>
+              <strong>INTERFACE ADMIN</strong>
+            </div>
+            <ul class="box-items">
+              <li>Angular — iframe embed</li>
+              <li>URL configurée ici</li>
+              <li>Rendu temps réel</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Vues analytiques SQL -->
+      <section class="etl-views card-section">
+        <div class="section-header">
+          <span class="micro-label">VUES POSTGRESQL — SCHÉMA analytics (database_cheques)</span>
+          <code class="file-badge">analytics/etl_views.sql</code>
+        </div>
+        <div class="views-table">
+          @for (view of sqlViews; track view.name) {
+            <div class="view-row">
+              <div class="view-name">
+                <code>analytics.{{ view.name }}</code>
+              </div>
+              <div class="view-grain">{{ view.grain }}</div>
+              <div class="view-cols">{{ view.cols }}</div>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Guide connexion Power BI Desktop -->
+      <section class="etl-guide card-section">
+        <div class="section-header">
+          <span class="micro-label">GUIDE DE CONNEXION — POWER BI DESKTOP</span>
+          <span class="badge-free">Gratuit</span>
+        </div>
+        <div class="guide-steps">
+          @for (step of connectionGuide; track step.num) {
+            <div class="guide-step">
+              <div class="guide-num">{{ step.num }}</div>
+              <div class="guide-text">
+                <strong>{{ step.title }}</strong>
+                <p>{{ step.desc }}</p>
+                @if (step.code) {
+                  <code class="inline-code">{{ step.code }}</code>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+    </div>
+  }
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       ONGLET 3 — MODÈLES PRÉDICTIFS
+       ════════════════════════════════════════════════════════════════════════ -->
+  @if (activeTab() === 'mining') {
+    <div class="mining-view">
+
+      <!-- KPI strip (données réelles) -->
+      @if (!isLoading() && dashData()) {
+        <div class="kpi-strip">
+          <div class="kpi-pill">
+            <span class="kpi-label">Chèques analysés</span>
+            <strong>{{ totalCheques }}</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="kpi-label">Score IA moyen</span>
+            <strong [style.color]="getScoreColor(scoreIa)">{{ scoreIa | number:'1.1-1' }}%</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="kpi-label">Taux d'erreur IA</span>
+            <strong [style.color]="getScoreColor(100 - tauxErreur)">{{ tauxErreur | number:'1.1-1' }}%</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="kpi-label">Alertes fraude</span>
+            <strong [style.color]="alertesFraude > 0 ? '#EF4444' : '#10B981'">{{ alertesFraude }}</strong>
+          </div>
+          <div class="kpi-pill small">
+            <span class="kpi-label">Script ML</span>
+            <code>analytics_models.py</code>
+          </div>
+        </div>
+      }
+
+      <!-- Charts réelles (Chart.js) -->
+      <div class="charts-grid">
+        <div class="chart-card span-2">
+          <div class="chart-header">
+            <span class="micro-label">VOLUME DE TRAITEMENT — 7 DERNIERS JOURS (données réelles)</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas #volumeCanvas></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="micro-label">RÉPARTITION DES STATUTS</span>
+          </div>
+          <div class="chart-wrap donut-wrap">
+            <canvas #statusCanvas></canvas>
+          </div>
+        </div>
+        <div class="chart-card span-2">
+          <div class="chart-header">
+            <span class="micro-label">DISTRIBUTION DES SCORES IA GLOBAL — MODÈLE GAUSSIEN (basé sur précision réelle)</span>
+            <span class="threshold-badge">Seuil pipeline : 0.85</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas #scoreCanvas></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cartes modèles ML -->
+      <div class="section-header">
+        <span class="micro-label">MODÈLES ENTRAÎNÉS — analytics/analytics_models.py</span>
+      </div>
+      <div class="models-grid">
+        @for (m of miningModels; track m.title) {
+          <div class="model-card" [style.border-color]="m.border" [style.background]="m.bg">
+            <div class="model-top">
+              <span class="model-icon">{{ m.icon }}</span>
+              <div class="model-meta">
+                <h3 [style.color]="m.color">{{ m.title }}</h3>
+                <span class="algo-badge" [style.color]="m.color" [style.background]="m.border">{{ m.algo }}</span>
+              </div>
+              <div class="model-score">
+                <div class="score-ring" [style.--color]="m.color">
+                  <span>{{ m.auc }}%</span>
+                  <small>AUC</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="model-metrics">
+              <div class="metric">
+                <span>Précision</span>
+                <div class="mini-bar">
+                  <div class="mini-fill" [style.width.%]="m.precision" [style.background]="m.color"></div>
+                </div>
+                <strong>{{ m.precision }}%</strong>
+              </div>
+              <div class="metric">
+                <span>Rappel</span>
+                <div class="mini-bar">
+                  <div class="mini-fill" [style.width.%]="m.recall" [style.background]="m.color"></div>
+                </div>
+                <strong>{{ m.recall }}%</strong>
+              </div>
+            </div>
+
+            <div class="model-features">
+              <span class="feat-label">Features :</span>
+              <div class="features-list">
+                @for (f of m.features; track f) {
+                  <span class="feat-tag">{{ f }}</span>
+                }
+              </div>
+            </div>
+
+            <div class="model-output">
+              <span class="output-label">Output :</span>
+              <span>{{ m.output }}</span>
+            </div>
+
+            <div class="model-note">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+              </svg>
+              {{ m.note }}
+            </div>
+
+            <div class="model-file">
+              <code>./models/{{ m.file }}</code>
+            </div>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+</div>
+
+<!-- Données statiques utilisées dans le template -->
+<ng-template #_data>
+  <!-- pbiVisuals, sqlViews, connectionGuide définis dans le TS -->
+</ng-template>

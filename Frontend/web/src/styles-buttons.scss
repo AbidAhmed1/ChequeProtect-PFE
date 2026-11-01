@@ -1,0 +1,135 @@
+@use "sass:color";
+
+/* ==========================================================================
+   DESIGN SYSTEM : OPERATIONAL WHITE - BUTTONS MODULE
+   Expert UI/UX Implementation for Banking Sector
+   ========================================================================== */
+
+// 1. Design Tokens (Variables)
+$btn-radius: 12px;
+$btn-font-family: 'Inter', 'Urbanist', sans-serif;
+$btn-weight: 700;
+$btn-size: 14px;
+$btn-padding: 14px 28px;
+$btn-transition: all 0.3s ease;
+
+// Color Palette
+$color-trust-blue: #2563EB;
+$color-trust-light: #3B82F6;
+$color-primary-gradient: linear-gradient(135deg, #2563EB, #3B82F6);
+$color-trust-dark: #1D4ED8;
+$color-focus-ring: #BFDBFE;
+$color-off-white: #F8FAFC;
+$color-slate-text: #475569;
+$color-border: #E2E8F0;
+$color-bg-light: #F1F5F9;
+$color-danger: #EF4444;
+$color-danger-dark: #DC2626;
+$color-disabled-bg: #E2E8F0;
+$color-disabled-text: #94A3B8;
+
+// 2. Base Button Style
+// --------------------------------------------------------------------------
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; // Perfectly handles spacing for FontAwesome icons
+  padding: $btn-padding;
+  font-family: $btn-font-family;
+  font-weight: $btn-weight;
+  font-size: $btn-size;
+  border-radius: $btn-radius;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: $btn-transition;
+  white-space: nowrap;
+  user-select: none;
+  outline: none;
+  position: relative;
+
+  // Micro-interaction: Scale effect on click
+  &:active {
+    transform: scale(0.98);
+  }
+
+  // Accessibility: Focus Ring
+  &:focus-visible {
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+  }
+
+  // Global Disabled State
+  &:disabled, 
+  &.is-disabled {
+    background-color: $color-disabled-bg !important;
+    color: $color-disabled-text !important;
+    border-color: transparent !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+    pointer-events: none;
+  }
+}
+
+// 3. Style Variants
+// --------------------------------------------------------------------------
+
+// --- PRIMARY (Main Actions) ---
+.btn-primary {
+  @extend .btn;
+  background-color: $color-trust-blue;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 10px rgba($color-trust-blue, 0.2);
+
+  &:hover {
+    background-color: color.adjust($color-trust-blue, $lightness: -5%);
+    box-shadow: 0 6px 16px rgba($color-trust-blue, 0.3);
+    transform: translateY(-1px);
+  }
+}
+
+// --- SECONDARY (Neutral Actions) ---
+.btn-secondary {
+  @extend .btn;
+  background-color: $color-off-white;
+  border: 1px solid $color-border;
+  color: $color-slate-text;
+
+  &:hover {
+    background-color: $color-bg-light;
+    color: $color-trust-blue;
+    border-color: $color-trust-blue;
+  }
+}
+
+// --- DANGER (Destructive Actions) ---
+.btn-danger {
+  @extend .btn;
+  background-color: $color-danger;
+  color: white;
+
+  &:hover {
+    background-color: $color-danger-dark;
+    box-shadow: 0 4px 12px rgba($color-danger, 0.2);
+  }
+}
+
+// --- ICON ONLY / ICON TEXT ---
+.btn-icon {
+  @extend .btn;
+  // Specific alignment for FontAwesome
+  i, .fa, .fas, .fab {
+    font-size: 1.1em;
+    line-height: 1;
+  }
+}
+
+/* Helper for only icons (circular style option) */
+.btn-circle {
+  @extend .btn-icon;
+  padding: 12px;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+}

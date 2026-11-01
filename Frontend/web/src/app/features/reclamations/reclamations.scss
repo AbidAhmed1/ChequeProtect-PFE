@@ -1,0 +1,320 @@
+.recl-page {
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.recl-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+
+  .page-title   { font-size: 1.8rem; font-weight: 800; color: #0F172A; margin: 0.2rem 0 0; letter-spacing: -0.02em; }
+  .page-subtitle { color: #64748B; font-size: 0.95rem; margin-top: 0.25rem; }
+}
+
+.micro-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.btn-refresh {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #E2E8F0; border-radius: 8px;
+  background: white; color: #475569; font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+  &:hover:not(:disabled) { background: #F8FAFC; border-color: #CBD5E1; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  .spinning { display: inline-block; animation: spin 0.8s linear infinite; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* KPI chips */
+.recl-kpis {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.kpi-chip {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 0.75rem 1.25rem;
+  background: white; border: 1.5px solid #E2E8F0; border-radius: 10px;
+  cursor: pointer; transition: all 0.15s; min-width: 90px;
+  &:hover { border-color: #94A3B8; }
+  &.active { border-color: #1d4ed8; background: #EFF6FF; }
+  &.warning.active { border-color: #D97706; background: #FFFBEB; }
+  &.blue.active   { border-color: #2563EB; background: #EFF6FF; }
+  &.success.active { border-color: #059669; background: #ECFDF5; }
+
+  .kpi-num { font-size: 1.6rem; font-weight: 800; color: #0F172A; line-height: 1; }
+  .kpi-lbl { font-size: 0.72rem; font-weight: 600; color: #64748B; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+}
+
+/* Loading */
+.loading-center {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 1rem; padding: 4rem 0; color: #64748B;
+
+  .spinner-lg {
+    width: 40px; height: 40px;
+    border: 3px solid #E2E8F0;
+    border-top-color: #1d4ed8;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+/* Empty */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.75rem; padding: 4rem 0; color: #64748B;
+  .empty-icon { font-size: 3rem; }
+  p { font-size: 1rem; margin: 0; }
+}
+
+.btn-link {
+  background: none; border: none; color: #1d4ed8;
+  font-size: 0.9rem; cursor: pointer; text-decoration: underline;
+  padding: 0;
+}
+
+/* Cards */
+.recl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.recl-card {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  transition: box-shadow 0.15s;
+  &:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+}
+
+.recl-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.6rem;
+}
+
+.recl-meta {
+  display: flex; flex-direction: column; gap: 2px;
+  .recl-objet { font-size: 1rem; font-weight: 700; color: #0F172A; }
+  .recl-date  { font-size: 0.78rem; color: #94A3B8; }
+}
+
+.recl-client {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+
+  .recl-client-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1E293B;
+  }
+
+  .recl-client-id {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.55rem;
+    border-radius: 20px;
+    font-family: monospace;
+    &.badge-cin { background: #EFF6FF; color: #1E40AF; }
+    &.badge-rib { background: #F0FDF4; color: #166534; }
+    &.badge-tel { background: #F8FAFC; color: #475569; }
+  }
+}
+
+.recl-desc {
+  font-size: 0.9rem; color: #475569; margin: 0 0 0.75rem;
+  line-height: 1.55;
+}
+
+.recl-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  .recl-id, .recl-cheque {
+    font-size: 0.78rem; color: #94A3B8; font-family: monospace;
+  }
+}
+
+.btn-transmit {
+  display: flex; align-items: center; gap: 5px;
+  margin-left: auto;
+  padding: 0.4rem 0.9rem;
+  background: #1d4ed8; color: white;
+  border: none; border-radius: 7px;
+  font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+  &:hover:not(:disabled) { background: #1e40af; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.spinner-sm {
+  width: 12px; height: 12px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+}
+
+.recl-reponse {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  background: #F8FAFC;
+  border-radius: 8px;
+  font-size: 0.85rem; color: #475569;
+  border-left: 3px solid #059669;
+}
+
+/* KPI chip purple */
+.kpi-chip.purple.active { border-color: #7C3AED; background: #F5F3FF; }
+
+/* Card active state */
+.recl-card-active {
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.08);
+}
+
+/* Bouton répondre */
+.btn-repondre {
+  display: flex; align-items: center; gap: 5px;
+  margin-left: auto;
+  padding: 0.4rem 0.9rem;
+  background: white; color: #1d4ed8;
+  border: 1.5px solid #1d4ed8; border-radius: 7px;
+  font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+  &:hover { background: #EFF6FF; }
+  &.active { background: #EFF6FF; }
+}
+
+/* Formulaire inline */
+.recl-update-form {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  animation: slideDown 0.18s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.form-row {
+  margin-bottom: 0.85rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  .optional {
+    font-weight: 400;
+    text-transform: none;
+    color: #94A3B8;
+    margin-left: 4px;
+  }
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.45rem 0.7rem;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  background: white;
+  color: #0F172A;
+  outline: none;
+  transition: border-color 0.15s;
+  &:focus { border-color: #1d4ed8; }
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 7px;
+  font-size: 0.88rem;
+  color: #0F172A;
+  resize: vertical;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+  &:focus { border-color: #1d4ed8; }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.btn-cancel {
+  padding: 0.45rem 1rem;
+  background: white; color: #64748B;
+  border: 1.5px solid #CBD5E1; border-radius: 7px;
+  font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+  &:hover { background: #F1F5F9; }
+}
+
+.btn-save {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0.45rem 1.2rem;
+  background: #1d4ed8; color: white;
+  border: none; border-radius: 7px;
+  font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+  &:hover:not(:disabled) { background: #1e40af; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+/* Status badges */
+.status-badge {
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &.status-ouverte   { background: #FEF3C7; color: #92400E; }
+  &.status-en_cours  { background: #DBEAFE; color: #1E40AF; }
+  &.status-transmise { background: #EDE9FE; color: #5B21B6; }
+  &.status-resolue   { background: #F0FDF4; color: #166534; }
+  &.status-fermee    { background: #F1F5F9; color: #475569; }
+}

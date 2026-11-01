@@ -1,0 +1,470 @@
+.dashboard-view {
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.view-header {
+  margin-bottom: 2.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  .title-block {
+    h1 { font-size: 2rem; font-weight: 800; color: #0F172A; margin: 0; letter-spacing: -0.02em; }
+    .subtitle { color: #64748B; font-size: 1rem; margin-top: 0.3rem; font-weight: 500; }
+  }
+}
+
+.micro-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* --- BENTO GRID LAYOUT --- */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto 380px;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* KPI Cards */
+.stat-card-pro {
+  background: white; border-radius: 12px; padding: 1.75rem;
+  border: 1px solid #E2E8F0; box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+  display: flex; flex-direction: column; gap: 0.85rem;
+  
+  .card-header { display: flex; justify-content: space-between; align-items: center; }
+  .icon-sm { 
+    width: 36px; height: 36px; border-radius: 10px; font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    &.blue { background: #eff6ff; color: #2563eb; }
+    &.gold { background: #fffbeb; color: #f59e0b; }
+    &.red { background: #fef2f2; color: #ef4444; }
+    &.green { background: #f0fdf4; color: #10b981; }
+  }
+
+  .value { font-size: 2rem; font-weight: 800; color: #0F172A; margin: 0; letter-spacing: -0.02em; }
+  .stat-desc { font-size: 12px; color: #64748B; margin: 0; font-weight: 500; }
+}
+
+/* Carte Activité inline (supervision) */
+.fraud-card-inline { grid-column: span 3; }
+
+.badge-activity-count {
+  font-size: 11px; font-weight: 800; border-radius: 20px;
+  background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE;
+  padding: 0.2rem 0.65rem;
+}
+
+.activity-preview-list {
+  display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem;
+}
+
+.activity-preview-row {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.45rem 0.6rem; border-radius: 8px;
+  border: 1px solid #F1F5F9; background: #FAFAFA;
+  .act-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; flex-shrink: 0;
+  }
+  .act-info {
+    flex: 1; display: flex; flex-direction: column; gap: 0.1rem;
+    strong { font-size: 12px; color: #0F172A; font-weight: 700; }
+    span   { font-size: 10px; color: #94A3B8; }
+  }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+}
+
+
+/* Health & Security */
+.health-security-card {
+  background: white; border-radius: 12px; padding: 2rem;
+  border: 1px solid #E2E8F0; box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+
+  .health-monitor {
+    margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;
+
+    .monitor-item {
+      .item-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;
+        span { font-size: 13px; font-weight: 600; color: #64748B; }
+        strong { font-size: 14px; font-weight: 800; color: #0F172A; }
+      }
+      .progress-bar {
+        height: 6px; background: #F1F5F9; border-radius: 10px; overflow: hidden;
+        .fill { height: 100%; background: #2563EB; border-radius: 10px; }
+      }
+      .status-dot-text {
+        display: flex; align-items: center; gap: 0.5rem; font-size: 13px; font-weight: 700; color: #10B981;
+        .dot { width: 8px; height: 8px; background: #10B981; border-radius: 50%; 
+          &.pulse { animation: pulseGreen 2s infinite; }
+        }
+      }
+    }
+
+    .alert-box-danger {
+      background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 12px; padding: 1.25rem;
+      display: flex; flex-direction: column; gap: 1rem;
+      
+      .alert-content {
+        display: flex; gap: 0.75rem;
+        .icon { font-size: 1.25rem; }
+        .text {
+          strong { display: block; font-size: 13px; color: #9F1239; }
+          p { font-size: 11px; color: #BE123C; margin: 0; font-weight: 500; }
+        }
+      }
+
+      .btn-verify-sm {
+        background: white; border: 1px solid #FECDD3; padding: 0.4rem; border-radius: 8px;
+        color: #BE123C; font-size: 11px; font-weight: 800; cursor: pointer;
+        &:hover { background: #FB7185; color: white; border-color: #FB7185; }
+      }
+    }
+  }
+}
+
+/* Activity Section */
+.activity-section {
+  background: white; border-radius: 12px; padding: 2rem;
+  border: 1px solid #E2E8F0;
+  
+  .activity-list-modern {
+    margin-top: 1.5rem; display: flex; flex-direction: column;
+    
+    .activity-row {
+      display: grid; grid-template-columns: 44px 1fr 100px 100px;
+      align-items: center; gap: 1.5rem; padding: 1rem; border-bottom: 1px solid #F1F5F9;
+      &:last-child { border-bottom: none; }
+      
+      .agent-avatar {
+        width: 44px; height: 44px; background: #1E293B; color: white;
+        border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 0.9rem;
+      }
+
+      .info {
+        strong { display: block; font-size: 0.95rem; color: #0F172A; }
+        span { font-size: 0.8rem; color: #94A3B8; font-weight: 500; }
+      }
+
+      .time { font-size: 0.85rem; font-weight: 600; color: #94A3B8; text-align: right; }
+      
+      .status-pill {
+        font-size: 11px; font-weight: 800; padding: 0.35rem 0.75rem; border-radius: 20px; text-align: center;
+        &.success { background: #ecfdf5; color: #065f46; }
+        &.danger  { background: #fef2f2; color: #991b1b; }
+        &.warning { background: #fffbeb; color: #92400e; }
+      }
+    }
+  }
+}
+
+@keyframes pulseGreen { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+.loading-state-full {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 8rem 2rem; color: #94A3B8; gap: 1.5rem;
+  .spinner-large {
+    width: 48px; height: 48px; border: 4px solid #F1F5F9; border-top-color: #2563EB;
+    border-radius: 50%; animation: spin 1s linear infinite;
+  }
+  p { font-weight: 600; font-size: 1.1rem; }
+}
+
+@keyframes spin    { from { transform: rotate(0deg); }   to { transform: rotate(360deg); } }
+@keyframes fadeIn  { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ONGLETS
+// ══════════════════════════════════════════════════════════════════════════════
+.tab-nav {
+  display: flex; gap: 0.25rem; margin-bottom: 2rem;
+  background: #F8FAFC; border-radius: 10px; padding: 0.3rem;
+  border: 1px solid #E2E8F0; width: fit-content;
+}
+
+.tab-btn {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 1.1rem; border-radius: 8px; border: none;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  background: transparent; color: #64748B; transition: all 0.15s;
+  &:hover  { background: white; color: #0F172A; }
+  &.active { background: white; color: #2563EB;
+             box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+}
+
+.tab-badge {
+  min-width: 18px; height: 18px; background: #EF4444; color: white;
+  border-radius: 10px; font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px;
+}
+
+.header-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+.btn-config {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 1rem; border-radius: 8px;
+  background: #F8FAFC; border: 1px solid #E2E8F0;
+  font-size: 12px; font-weight: 700; color: #475569; cursor: pointer;
+  &:hover { background: #EFF6FF; border-color: #93C5FD; color: #2563EB; }
+}
+
+// Communs aux nouveaux onglets
+.card-section {
+  background: white; border-radius: 14px; padding: 1.75rem;
+  border: 1px solid #E2E8F0; box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+  margin-bottom: 1.5rem;
+}
+
+.section-header-label {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.file-badge {
+  font-size: 11px; background: #F1F5F9; color: #475569;
+  border: 1px solid #E2E8F0; border-radius: 6px; padding: 0.2rem 0.6rem;
+}
+
+.badge-free {
+  font-size: 10px; font-weight: 800; background: #ECFDF5; color: #065F46;
+  border: 1px solid #A7F3D0; border-radius: 20px; padding: 0.2rem 0.6rem;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ONGLET MODÈLES PRÉDICTIFS
+// ══════════════════════════════════════════════════════════════════════════════
+.mining-view { display: flex; flex-direction: column; gap: 0; }
+
+.kpi-strip {
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  padding: 0.9rem 1.25rem; background: white; border: 1px solid #E2E8F0;
+  border-radius: 12px; margin-bottom: 1.5rem;
+}
+
+.kpi-pill {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0 0.9rem; border-right: 1px solid #E2E8F0;
+  &:last-child { border-right: none; }
+  .kpi-label { font-size: 11px; font-weight: 600; color: #94A3B8; }
+  strong { font-size: 1.05rem; font-weight: 800; color: #0F172A; }
+  code { font-size: 11px; background: #F1F5F9; padding: 0.15rem 0.5rem; border-radius: 4px; color: #475569; }
+}
+
+.charts-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.75rem;
+}
+
+.chart-card {
+  background: white; border: 1px solid #E2E8F0; border-radius: 14px;
+  padding: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+  &.span-2 { grid-column: span 2; }
+  &.span-3 { grid-column: span 3; }
+  .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+  .threshold-badge {
+    font-size: 10px; font-weight: 700; background: #EFF6FF; color: #2563EB;
+    border: 1px solid #BFDBFE; border-radius: 20px; padding: 0.15rem 0.6rem;
+  }
+}
+
+.chart-wrap { height: 230px; position: relative; }
+.donut-wrap { height: 215px; }
+
+.models-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 1.25rem;
+}
+
+.model-card {
+  border: 1.5px solid; border-radius: 14px; padding: 1.4rem;
+  display: flex; flex-direction: column; gap: 0.9rem;
+}
+
+.model-top {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  .model-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .model-meta {
+    flex: 1;
+    h3 { font-size: 0.95rem; font-weight: 800; margin: 0 0 0.25rem; }
+  }
+  .algo-badge { font-size: 10px; font-weight: 800; padding: 0.15rem 0.55rem;
+                border-radius: 20px; display: inline-block; }
+}
+
+.score-ring {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
+  border: 3px solid var(--ring-color, #10B981);
+  span  { font-size: 12px; font-weight: 800; color: #0F172A; }
+  small { font-size: 9px; color: #94A3B8; font-weight: 700; }
+}
+
+.model-metrics { display: flex; flex-direction: column; gap: 0.55rem; }
+
+.metric {
+  display: flex; align-items: center; gap: 0.5rem;
+  span { font-size: 11px; font-weight: 600; color: #64748B; width: 60px; flex-shrink: 0; }
+  .mini-bar { flex: 1; height: 5px; background: #F1F5F9; border-radius: 10px; overflow: hidden;
+    .mini-fill { height: 100%; border-radius: 10px; } }
+  strong { font-size: 11px; font-weight: 800; color: #0F172A; width: 34px; text-align: right; }
+}
+
+.model-features {
+  .feat-label { font-size: 10px; font-weight: 700; color: #94A3B8; text-transform: uppercase;
+                letter-spacing: 0.08em; display: block; margin-bottom: 0.35rem; }
+  .features-list { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+  .feat-tag { font-size: 10px; background: white; color: #475569; border: 1px solid #E2E8F0;
+    border-radius: 4px; padding: 0.12rem 0.4rem; font-weight: 600; }
+}
+
+.model-output {
+  font-size: 12px; color: #0F172A;
+  .output-label { font-weight: 700; color: #94A3B8; font-size: 10px; text-transform: uppercase; margin-right: 0.25rem; }
+}
+
+.model-note { font-size: 11px; color: #64748B; line-height: 1.4; font-style: italic; }
+
+.model-file { font-size: 10px; background: #F8FAFC; color: #64748B;
+  border: 1px solid #E2E8F0; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ONGLET EXPORT DONNÉES (ETL)
+// ══════════════════════════════════════════════════════════════════════════════
+.etl-view { display: flex; flex-direction: column; gap: 0; }
+
+.views-table {
+  display: flex; flex-direction: column; gap: 0;
+  border: 1px solid #E2E8F0; border-radius: 10px; overflow: hidden;
+}
+
+.view-row {
+  display: grid; grid-template-columns: 150px 160px 1fr;
+  padding: 0.7rem 1rem; border-bottom: 1px solid #F1F5F9;
+  align-items: center; gap: 1rem;
+  &:last-child { border-bottom: none; }
+  &:hover { background: #F8FAFC; }
+  .view-name { font-size: 12px; color: #2563EB; background: #EFF6FF;
+    padding: 0.2rem 0.5rem; border-radius: 5px; display: inline-block; }
+  .view-grain { font-size: 11px; color: #94A3B8; font-weight: 600; }
+  .view-cols  { font-size: 11px; color: #475569; line-height: 1.5; }
+}
+
+.export-form-card {
+  background: #F8FAFC; border-radius: 12px; padding: 1.5rem;
+  border: 1px solid #E2E8F0;
+}
+
+.export-form-row {
+  display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap;
+}
+
+.export-field {
+  display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 160px;
+  label { font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em; }
+  .input-modern { width: 100%; box-sizing: border-box; }
+  &.export-action { flex: 0 0 auto; min-width: auto; }
+}
+
+.export-msg {
+  margin-top: 0.85rem; font-size: 12px; font-weight: 700;
+  padding: 0.45rem 0.85rem; border-radius: 6px;
+  &.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+  &.error   { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+}
+
+.quick-exports-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+}
+
+.export-quick-card {
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+  padding: 1.25rem 1rem; background: white; border: 1.5px solid #E2E8F0;
+  border-radius: 12px; cursor: pointer; transition: all 0.15s; text-align: center;
+  .eq-icon { font-size: 1.6rem; }
+  strong { font-size: 13px; color: #0F172A; font-weight: 800; }
+  span   { font-size: 11px; color: #94A3B8; font-weight: 500; }
+  &:hover { border-color: #3B82F6; background: #EFF6FF;
+            strong { color: #2563EB; } }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ONGLET JOURNAL D'ACTIVITÉ
+// ══════════════════════════════════════════════════════════════════════════════
+.journal-view { display: flex; flex-direction: column; gap: 0; }
+
+.journal-filters {
+  display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+
+.filter-btn {
+  display: flex; align-items: center; gap: 0.35rem;
+  padding: 0.4rem 1rem; border-radius: 20px;
+  border: 1.5px solid #E2E8F0; background: white;
+  font-size: 12px; font-weight: 700; color: #64748B; cursor: pointer;
+  transition: all 0.15s;
+  &:hover  { border-color: #94A3B8; color: #0F172A; }
+  &.active { background: #1E293B; border-color: #1E293B; color: white; }
+  .dot-v { width: 7px; height: 7px; border-radius: 50%; background: #10B981; display: inline-block; }
+  .dot-r { width: 7px; height: 7px; border-radius: 50%; background: #EF4444; display: inline-block; }
+  .dot-p { width: 7px; height: 7px; border-radius: 50%; background: #F59E0B; display: inline-block; }
+}
+
+.empty-state-alerts {
+  text-align: center; padding: 3rem 1rem;
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  p { font-size: 1rem; font-weight: 700; color: #0F172A; margin: 0; }
+}
+
+.journal-table {
+  display: flex; flex-direction: column; gap: 0;
+  border: 1px solid #E2E8F0; border-radius: 10px; overflow: hidden;
+}
+
+.journal-table-header {
+  display: grid; grid-template-columns: 200px 130px 140px 1fr 110px;
+  padding: 0.6rem 1rem; background: #F8FAFC; gap: 1rem;
+  span { font-size: 10px; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.08em; }
+}
+
+.journal-row {
+  display: grid; grid-template-columns: 200px 130px 140px 1fr 110px;
+  padding: 0.8rem 1rem; border-top: 1px solid #F1F5F9;
+  align-items: center; gap: 1rem;
+  &:hover { background: #F8FAFC; }
+}
+
+.journal-agent {
+  display: flex; align-items: center; gap: 0.5rem;
+  .agent-avatar-sm {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #EFF6FF; color: #2563EB;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; flex-shrink: 0;
+  }
+  span { font-size: 12px; color: #0F172A; font-weight: 600; }
+}
+
+.journal-action { font-size: 12px; font-weight: 700; }
+.journal-time   { font-size: 11px; color: #94A3B8; }
+
+// Boutons communs
+.btn-primary {
+  padding: 0.55rem 1.2rem; background: #2563EB; color: white;
+  border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: background 0.15s;
+  &:hover:not(:disabled) { background: #1D4ED8; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.btn-secondary {
+  padding: 0.55rem 1.2rem; background: #F8FAFC; color: #475569;
+  border: 1px solid #E2E8F0; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;
+  &:hover { background: #F1F5F9; }
+}

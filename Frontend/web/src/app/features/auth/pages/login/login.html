@@ -1,0 +1,186 @@
+<div class="login-root">
+  <!-- Hidden page title for screen readers -->
+  <h1 class="sr-only">ChèqueProtect — Connexion</h1>
+
+  <!-- Left panel (branding) — decorative, hidden from assistive tech -->
+  <div class="login-brand-panel" aria-hidden="true">
+    <div class="brand-content">
+      <div class="brand-logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+      </div>
+      <h1 class="brand-headline">ChèqueProtect</h1>
+      <p class="brand-desc">Plateforme intelligente de traitement et de vérification des chèques bancaires par IA.</p>
+
+      <div class="brand-features">
+        <div class="brand-feature">
+          <span class="feature-check">✓</span>
+          <span>Reconnaissance OCR haute précision</span>
+        </div>
+        <div class="brand-feature">
+          <span class="feature-check">✓</span>
+          <span>Détection de fraude en temps réel</span>
+        </div>
+        <div class="brand-feature">
+          <span class="feature-check">✓</span>
+          <span>Audit et traçabilité complète</span>
+        </div>
+        <div class="brand-feature">
+          <span class="feature-check">✓</span>
+          <span>Interface sécurisée ISO-27001</span>
+        </div>
+      </div>
+    </div>
+    <div class="brand-footer">
+      <span class="iso-badge">🔐 ISO-27001 Certifié</span>
+    </div>
+  </div>
+
+  <!-- Right panel (form) -->
+  <div class="login-form-panel">
+    <div class="login-card">
+      <!-- Header -->
+      <div class="login-header">
+        <div class="login-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="login-title">Connexion</h2>
+          <p class="login-subtitle">Accédez à votre espace sécurisé</p>
+        </div>
+      </div>
+
+      <!-- Error alert -->
+      <div class="login-error" *ngIf="errorMessage()"
+           role="alert" aria-live="assertive" aria-atomic="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        {{ errorMessage() }}
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form" novalidate aria-label="Formulaire de connexion">
+
+        <div class="form-field">
+          <label for="email">Adresse e-mail</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              class="input-modern input-with-icon"
+              placeholder="nom@banque.tn"
+              autocomplete="email"
+              aria-required="true"
+              aria-describedby="email-error"
+              [attr.aria-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+            />
+          </div>
+          <div id="email-error" class="field-error" role="alert"
+               *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+            Adresse e-mail invalide
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="password">Mot de passe</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input
+              id="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              class="input-modern input-with-icon input-with-icon-right"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              aria-required="true"
+              aria-describedby="password-error"
+              [attr.aria-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+            />
+            <button type="button" class="input-icon-right" (click)="togglePassword()"
+                    [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'">
+              <svg *ngIf="!showPassword()" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg *ngIf="showPassword()" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+          <div id="password-error" class="field-error" role="alert"
+               *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+            Mot de passe requis
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary btn-full btn-lg"
+          [disabled]="loginForm.invalid || isLoading()"
+          [attr.aria-busy]="isLoading()"
+          style="margin-top:.5rem"
+        >
+          <span class="spinner" *ngIf="isLoading()"></span>
+          <span>{{ isLoading() ? 'Connexion...' : 'Se connecter' }}</span>
+        </button>
+      </form>
+
+      <!-- Mot de passe oublié -->
+      <div style="text-align:center;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+        <button type="button" class="forgot-link" (click)="openForgotModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.35rem"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Mot de passe oublié ? Contacter l'administration
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal : Contacter l'administration -->
+<div class="modal-backdrop" *ngIf="showForgotModal()"
+     role="dialog" aria-modal="true" aria-labelledby="forgot-modal-title"
+     (click)="closeForgotModal()">
+  <div class="modal" style="max-width:420px" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 id="forgot-modal-title" style="font-size:1rem">Contacter l'administration</h2>
+      <button class="btn-icon" (click)="closeForgotModal()" aria-label="Fermer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- Succès -->
+      <div *ngIf="forgotSuccess()" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:1rem;color:#166534;font-size:.9rem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.4rem"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Demande envoyée. L'administrateur vous contactera pour réinitialiser votre mot de passe.
+      </div>
+
+      <!-- Formulaire -->
+      <div *ngIf="!forgotSuccess()">
+        <p style="font-size:.875rem;color:var(--text-muted);margin-bottom:1.25rem">
+          Saisissez votre adresse e-mail. L'administrateur sera alerté et vous communiquera votre nouveau mot de passe.
+        </p>
+        <div class="form-field">
+          <label for="forgot-email">Adresse e-mail</label>
+          <input
+            id="forgot-email"
+            type="email"
+            class="input-modern"
+            placeholder="votre&#64;email.tn"
+            [value]="forgotEmail()"
+            (input)="onForgotEmailInput($event)"
+            autocomplete="email"
+          />
+          <div class="field-error" role="alert" *ngIf="forgotError()">{{ forgotError() }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" *ngIf="!forgotSuccess()">
+      <button class="btn btn-secondary" (click)="closeForgotModal()">Annuler</button>
+      <button class="btn btn-primary" (click)="sendForgotRequest()" [disabled]="forgotLoading()">
+        <span class="spinner" *ngIf="forgotLoading()"></span>
+        <span>{{ forgotLoading() ? 'Envoi...' : 'Envoyer la demande' }}</span>
+      </button>
+    </div>
+  </div>
+</div>

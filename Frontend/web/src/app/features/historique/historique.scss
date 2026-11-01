@@ -1,0 +1,65 @@
+.historique-page {
+  max-width: 1200px;
+}
+
+.btn-pdf-hist {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .45rem .9rem;
+  background: #EFF6FF;
+  color: #1d4ed8;
+  border: 1.5px solid #BFDBFE;
+  border-radius: 8px;
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+
+  &:hover:not(:disabled) { background: #DBEAFE; border-color: #93C5FD; }
+  &:disabled { opacity: .5; cursor: not-allowed; }
+}
+
+.filter-bar {
+  display: flex;
+  gap: .75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.cheque-id {
+  font-family: 'Courier New', monospace;
+  font-size: .8rem;
+  background: var(--surface-3);
+  padding: .2rem .5rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+}
+
+.status-dot-sm {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .filter-bar {
+    flex-direction: column;
+  }
+  .filter-bar > * {
+    width: 100% !important;
+  }
+}

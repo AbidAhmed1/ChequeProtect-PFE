@@ -1,0 +1,193 @@
+<!-- ── Privacy overlay class on root ── -->
+<div class="app-shell" [class.privacy-active]="isPrivacyMode()">
+
+  <a href="#main-content" class="skip-nav">Aller au contenu principal</a>
+
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <aside class="sidebar" id="main-sidebar" [class.sidebar-open]="isSidebarOpen()" role="complementary" aria-label="Navigation principale">
+
+    <!-- Logo / Brand -->
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">ChèqueProtect</span>
+        <span class="brand-tagline">Plateforme sécurisée</span>
+      </div>
+    </div>
+
+    <!-- Operator section -->
+    <div class="sidebar-user privacy-sensitive">
+      <img *ngIf="hasProfilePicture()"
+           [src]="currentUser()!.avatar!"
+           class="avatar avatar-photo"
+           alt="Photo de profil" />
+      <div *ngIf="!hasProfilePicture()"
+           class="avatar"
+           [style.background]="currentUser()?.role === 'ADMIN' ? '#7c3aed' : '#2563eb'">
+        {{ currentUser()?.firstName?.[0] }}{{ currentUser()?.lastName?.[0] }}
+      </div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</span>
+        <span class="badge" [class]="currentUser()?.role === 'ADMIN' ? 'badge-primary' : 'badge-success'" style="font-size:.65rem;padding:.1rem .5rem">
+          {{ currentUser()?.role }}
+        </span>
+      </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav" role="navigation" aria-label="Menu principal">
+      <ng-container *ngFor="let section of navSections">
+        <p class="sidebar-section-label">{{ section.title }}</p>
+        <a
+          *ngFor="let item of section.items"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          #rla="routerLinkActive"
+          [attr.aria-current]="rla.isActive ? 'page' : null"
+          class="sidebar-item"
+          (click)="closeSidebar()"
+        >
+          <span class="sidebar-item-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+          </span>
+          <span class="sidebar-item-text">{{ item.label }}</span>
+        </a>
+      </ng-container>
+    </nav>
+
+    <div class="sidebar-spacer"></div>
+
+    <!-- Privacy toggle -->
+    <button class="sidebar-action" (click)="togglePrivacy()" [attr.aria-pressed]="isPrivacyMode()" aria-label="Mode confidentialité">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path *ngIf="!isPrivacyMode()" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle *ngIf="!isPrivacyMode()" cx="12" cy="12" r="3"/>
+        <path *ngIf="isPrivacyMode()" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line *ngIf="isPrivacyMode()" x1="1" y1="1" x2="23" y2="23"/>
+      </svg>
+      <span>{{ isPrivacyMode() ? 'Désactiver confidentialité' : 'Mode confidentiel' }}</span>
+    </button>
+
+    <!-- Logout -->
+    <button class="sidebar-action sidebar-action-danger" (click)="logout()" aria-label="Déconnexion de l'application">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      <span>Déconnexion</span>
+    </button>
+  </aside>
+
+  <!-- Mobile backdrop -->
+  <div class="sidebar-backdrop" [class.visible]="isSidebarOpen()" (click)="toggleSidebar()" aria-hidden="true" tabindex="-1"></div>
+
+  <!-- ══════════════ MAIN AREA ══════════════ -->
+  <div class="main-area">
+
+    <!-- Topbar -->
+    <header class="topbar" role="banner">
+      <div class="topbar-left">
+        <button class="btn-icon hide-desktop" (click)="toggleSidebar()" [attr.aria-expanded]="isSidebarOpen()" aria-label="Ouvrir la navigation" aria-controls="main-sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <div>
+          <h1 class="topbar-title">{{ currentUser()?.role === 'ADMIN' ? 'Espace supervision' : 'Espace traitement' }}</h1>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Environment badge -->
+        <div class="env-badge">
+          <span class="sr-only">Environnement:</span>
+          <span>PROD</span>
+        </div>
+
+        <!-- System status -->
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span class="hide-mobile">Système en ligne</span>
+        </div>
+
+        <!-- Session indicator -->
+        <div class="session-indicator" title="Session active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span class="hide-mobile" style="font-size:.8rem;color:var(--text-secondary)">Session sécurisée</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <main id="main-content" class="page-content" role="main" tabindex="-1">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+  <!-- ══════════════ TOASTS ══════════════ -->
+  <div class="toast-container"
+       role="log"
+       aria-live="polite"
+       aria-atomic="false"
+       aria-label="Notifications système">
+    <div
+      *ngFor="let toast of toasts()"
+      class="toast"
+      role="status"
+      [class.success]="toast.type === 'success'"
+      [class.error]="toast.type === 'error'"
+      [class.warning]="toast.type === 'warning'"
+    >
+      <span class="toast-icon">
+        <ng-container [ngSwitch]="toast.type">
+          <span *ngSwitchCase="'success'">✓</span>
+          <span *ngSwitchCase="'error'">✕</span>
+          <span *ngSwitchCase="'warning'">⚠</span>
+          <span *ngSwitchDefault>ℹ</span>
+        </ng-container>
+      </span>
+      <div class="toast-body">
+        <div class="toast-title">{{ toast.type | titlecase }}</div>
+        <div class="toast-msg">{{ toast.message }}</div>
+      </div>
+      <button class="toast-close" (click)="removeToast(toast.id)" aria-label="Fermer la notification">×</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ SESSION TIMEOUT MODAL ══════════════ -->
+  <div class="modal-backdrop" *ngIf="showTimeoutModal()"
+       role="dialog" aria-modal="true"
+       aria-labelledby="session-modal-title"
+       aria-describedby="session-modal-desc">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-header">
+        <h2 id="session-modal-title">Session sur le point d'expirer</h2>
+      </div>
+      <div class="modal-body" style="text-align:center;padding:2rem">
+        <div aria-hidden="true"
+             style="width:80px;height:80px;border-radius:50%;background:var(--warning-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:2rem;">⏱</div>
+        <p id="session-modal-desc"
+           aria-live="assertive" aria-atomic="true"
+           style="color:var(--text-secondary);margin-bottom:1.5rem">
+          Votre session expirera dans <strong style="color:var(--danger);font-size:1.2rem">{{ timeoutCountdown() }}s</strong> en raison d'inactivité.
+        </p>
+        <div style="display:flex;gap:.75rem;justify-content:center">
+          <button class="btn btn-secondary" (click)="logout()">Déconnexion</button>
+          <button class="btn btn-primary" (click)="resetInactivityTimer()"
+                  [attr.autofocus]="showTimeoutModal() ? '' : null">
+            Continuer la session
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

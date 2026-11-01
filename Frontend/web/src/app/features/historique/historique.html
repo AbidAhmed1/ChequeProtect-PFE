@@ -1,0 +1,158 @@
+<div class="historique-page">
+  <div class="page-header">
+    <div>
+      <p class="section-label">Contrôle &amp; Audit</p>
+      <h1 class="page-title">Historique des traitements</h1>
+      <p class="page-subtitle">{{ filteredCheques().length }} enregistrement(s) trouvé(s)</p>
+    </div>
+    <div style="display:flex;gap:.5rem">
+      <button class="btn btn-secondary" (click)="exportCsv()" [disabled]="isExportingCsv()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        {{ isExportingCsv() ? 'Export...' : 'CSV' }}
+      </button>
+      <button class="btn btn-pdf-hist" (click)="exportPdf()" [disabled]="isExportingPdf() || filteredCheques().length === 0">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="12" y1="18" x2="12" y2="12"/>
+          <polyline points="9 15 12 18 15 15"/>
+        </svg>
+        {{ isExportingPdf() ? 'Génération...' : 'PDF' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="card" style="padding:1.25rem;margin-bottom:1.5rem">
+    <div class="filter-bar">
+      <div style="position:relative;flex:1;min-width:200px">
+        <svg style="position:absolute;left:.875rem;top:50%;transform:translateY(-50%);color:var(--text-muted)" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input
+          class="input-modern"
+          style="padding-left:2.6rem"
+          type="text"
+          placeholder="Rechercher par ID, émetteur, banque..."
+          [value]="searchTerm()"
+          (input)="onSearchChange($event)"
+          aria-label="Rechercher dans l'historique"
+          autocomplete="off"
+        />
+      </div>
+
+      <input
+        class="input-modern"
+        style="width:160px;flex-shrink:0"
+        type="date"
+        [value]="dateFilter()"
+        (input)="onDateFilterChange($event)"
+        aria-label="Filtrer par date"
+      />
+
+      <select
+        class="input-modern"
+        style="width:160px;flex-shrink:0"
+        [value]="statusFilter()"
+        (change)="onStatusFilterChange($event)"
+        aria-label="Filtrer par statut">
+        <option value="ALL">Tous les statuts</option>
+        <option value="VALIDATED">Validé</option>
+        <option value="PENDING">En attente</option>
+        <option value="REJECTED">Rejeté</option>
+      </select>
+
+      <button
+        class="btn btn-secondary btn-sm"
+        (click)="searchTerm.set(''); dateFilter.set(''); statusFilter.set('ALL'); currentPage.set(1)"
+        aria-label="Réinitialiser tous les filtres">
+        Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <!-- Loading state -->
+    <div *ngIf="isLoading()" role="status" aria-label="Chargement de l'historique" style="padding:3rem;text-align:center">
+      <div class="spinner-dark" aria-hidden="true" style="margin:0 auto"></div>
+      <span class="sr-only">Chargement en cours…</span>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper" *ngIf="!isLoading()">
+      <table class="data-table" aria-label="Historique des chèques traités">
+        <caption class="sr-only">Liste des chèques traités, triés par date décroissante</caption>
+        <thead>
+          <tr>
+            <th scope="col">Identifiant</th>
+            <th scope="col">Date</th>
+            <th scope="col">Émetteur</th>
+            <th scope="col">Montant</th>
+            <th scope="col">Statut</th>
+            <th scope="col">Score OCR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cheque of paginatedCheques()">
+            <td>
+              <span class="cheque-id">#{{ cheque.id }}</span>
+            </td>
+            <td style="color:var(--text-secondary)">{{ cheque.uploadDate | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td style="font-weight:500">{{ cheque.emitterName.value }}</td>
+            <td style="font-weight:600">{{ cheque.amountNumeric.value }} TND</td>
+            <td>
+              <span class="badge"
+                [class.badge-success]="cheque.status === 'VALIDATED'"
+                [class.badge-warning]="cheque.status === 'PENDING'"
+                [class.badge-danger]="cheque.status === 'REJECTED'">
+                <span class="status-dot-sm"
+                  [style.background]="cheque.status === 'VALIDATED' ? 'var(--success)' : cheque.status === 'PENDING' ? 'var(--warning)' : 'var(--danger)'">
+                </span>
+                {{ cheque.status === 'VALIDATED' ? 'Validé' : cheque.status === 'PENDING' ? 'En attente' : 'Rejeté' }}
+              </span>
+            </td>
+            <td>
+              <div style="display:flex;align-items:center;gap:.6rem">
+                <span style="font-size:.8rem;font-weight:600;width:36px"
+                  [style.color]="cheque.overallConfidence >= .85 ? 'var(--success)' : cheque.overallConfidence >= .6 ? 'var(--warning)' : 'var(--danger)'">
+                  {{ (cheque.overallConfidence * 100) | number:'1.0-0' }}%
+                </span>
+                <div class="confidence-bar" style="width:60px">
+                  <div class="confidence-fill"
+                    [class.high]="cheque.overallConfidence >= .85"
+                    [class.medium]="cheque.overallConfidence >= .6 && cheque.overallConfidence < .85"
+                    [class.low]="cheque.overallConfidence < .6"
+                    [style.width.%]="cheque.overallConfidence * 100">
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="paginatedCheques().length === 0">
+            <td colspan="6" style="text-align:center;padding:3rem;color:var(--text-muted)">
+              <div style="font-size:2rem;margin-bottom:.75rem">📋</div>
+              Aucun chèque trouvé
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav class="pagination" *ngIf="!isLoading() && totalPages() > 1"
+         role="navigation" aria-label="Navigation dans les pages">
+      <span style="font-size:.825rem;color:var(--text-muted)" aria-live="polite" aria-atomic="true">
+        Page {{ currentPage() }} sur {{ totalPages() }}
+      </span>
+      <div style="display:flex;gap:.5rem">
+        <button class="btn btn-secondary btn-sm" (click)="prevPage()" [disabled]="currentPage() === 1"
+                aria-label="Page précédente">
+          ← Précédent
+        </button>
+        <button class="btn btn-secondary btn-sm" (click)="nextPage()" [disabled]="currentPage() === totalPages()"
+                aria-label="Page suivante">
+          Suivant →
+        </button>
+      </div>
+    </nav>
+  </div>
+</div>

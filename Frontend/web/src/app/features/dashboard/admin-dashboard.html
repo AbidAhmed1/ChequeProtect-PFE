@@ -1,0 +1,376 @@
+<div class="dashboard-view">
+
+  <!-- ── En-tête ───────────────────────────────────────────────────────────── -->
+  <header class="view-header">
+    <div class="title-block">
+      <h1>Supervision Générale</h1>
+      <p class="subtitle">
+        @if (activeTab() === 'supervision') { Centre de commandement et d'analyse IA }
+        @if (activeTab() === 'mining')      { Data Mining · Modèles prédictifs · Analyse décisionnelle }
+        @if (activeTab() === 'journal')     { Journal d'activité · Historique des actions · Traçabilité }
+      </p>
+    </div>
+    <div class="header-actions">
+      @if (activeTab() === 'supervision') {
+        <button class="btn-refresh" (click)="loadDashboardData()" [disabled]="isLoading()">
+          <span class="icon" [class.spinning]="isLoading()">↻</span> Actualiser
+        </button>
+      }
+    </div>
+  </header>
+
+  <!-- ── Navigation par onglets ─────────────────────────────────────────────── -->
+  <nav class="tab-nav">
+    <button class="tab-btn" [class.active]="activeTab() === 'supervision'" (click)="setTab('supervision')">
+      <span>📊</span> Supervision
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'mining'" (click)="setTab('mining')">
+      <span>🤖</span> Modèles Prédictifs
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'journal'" (click)="setTab('journal')">
+      <span>📋</span> Journal d'Activité
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       ONGLET 1 — SUPERVISION (contenu existant)
+       ══════════════════════════════════════════════════════════════════════════ -->
+  @if (activeTab() === 'supervision') {
+
+    @if (isLoading()) {
+      <div class="loading-state-full">
+        <div class="spinner-large"></div>
+        <p>Synchronisation des données sécurisées...</p>
+      </div>
+    } @else if (stats()) {
+      <div class="bento-grid">
+        <div class="stat-card-pro">
+          <div class="card-header">
+            <span class="micro-label">CHÈQUES TRAITÉS</span>
+            <div class="icon-sm blue">📄</div>
+          </div>
+          <h3 class="value">{{ stats()!.totalProcessedToday }}</h3>
+          <p class="stat-desc">Volume total aujourd'hui</p>
+        </div>
+
+        <div class="stat-card-pro">
+          <div class="card-header">
+            <span class="micro-label">EN ATTENTE</span>
+            <div class="icon-sm gold">🕒</div>
+          </div>
+          <h3 class="value">{{ stats()!.totalPending }}</h3>
+          <p class="stat-desc">Files d'attente actives</p>
+        </div>
+
+        <div class="stat-card-pro">
+          <div class="card-header">
+            <span class="micro-label">TAUX D'ERREUR</span>
+            <div class="icon-sm red">⚠</div>
+          </div>
+          <h3 class="value">{{ stats()!.aiErrorRate | number:'1.1-1' }}%</h3>
+          <p class="stat-desc">Chèques sous seuil IA (0.85)</p>
+        </div>
+
+        <div class="stat-card-pro">
+          <div class="card-header">
+            <span class="micro-label">AGENTS CONNECTÉS</span>
+            <div class="icon-sm green">👥</div>
+          </div>
+          <h3 class="value">{{ stats()!.activeAgents }}</h3>
+          <p class="stat-desc">Sessions actives en cours</p>
+        </div>
+
+        <!-- ── Aperçu journal d'activité ────────────────────────────────────── -->
+        <section class="health-security-card fraud-card-inline" style="cursor:pointer" (click)="setTab('journal')">
+          <div class="panel-header">
+            <span class="micro-label">ACTIVITÉ RÉCENTE</span>
+            <span class="badge-activity-count">{{ recentActivities().length }} action(s)</span>
+          </div>
+          @if (recentActivities().length === 0) {
+            <div style="text-align:center;padding:1.5rem 0;color:#94A3B8">
+              <div style="font-size:2rem">📋</div>
+              <p style="margin:.5rem 0 0;font-size:.875rem">Aucune activité récente</p>
+            </div>
+          } @else {
+            <div class="activity-preview-list">
+              @for (item of recentActivities().slice(0, 4); track item.id) {
+                <div class="activity-preview-row">
+                  <div class="act-avatar"
+                       [style.background]="item.status === 'VALIDATED' ? '#ECFDF5' : item.status === 'REJECTED' ? '#FEF2F2' : '#FFFBEB'"
+                       [style.color]="item.status === 'VALIDATED' ? '#059669' : item.status === 'REJECTED' ? '#DC2626' : '#D97706'">
+                    {{ item.agentName[0] }}
+                  </div>
+                  <div class="act-info">
+                    <strong>Chèque #{{ item.chequeNumber }}</strong>
+                    <span>{{ item.agentName }} · {{ item.time }}</span>
+                  </div>
+                  <span class="status-dot"
+                        [style.background]="item.status === 'VALIDATED' ? '#10B981' : item.status === 'REJECTED' ? '#EF4444' : '#F59E0B'">
+                  </span>
+                </div>
+              }
+            </div>
+          }
+        </section>
+
+        <section class="health-security-card">
+          <div class="panel-header">
+            <span class="micro-label">ÉTAT DU SYSTÈME IA</span>
+          </div>
+          <div class="health-monitor">
+            <div class="monitor-item">
+              <div class="item-info">
+                <span>Score IA moyen (précision)</span>
+                <strong [style.color]="stats()!.precisionOcrGlobale >= 80 ? '#059669' : stats()!.precisionOcrGlobale >= 60 ? '#d97706' : '#dc2626'">
+                  {{ stats()!.precisionOcrGlobale | number:'1.1-1' }}%
+                </strong>
+              </div>
+              <div class="progress-bar">
+                <div class="fill" [style.width.%]="stats()!.precisionOcrGlobale"
+                     [style.background]="stats()!.precisionOcrGlobale >= 80 ? '#059669' : stats()!.precisionOcrGlobale >= 60 ? '#d97706' : '#dc2626'">
+                </div>
+              </div>
+            </div>
+            <div class="monitor-item">
+              <div class="item-info">
+                <span>Chèques sous seuil IA (0.85)</span>
+                <strong [style.color]="stats()!.aiErrorRate <= 20 ? '#059669' : stats()!.aiErrorRate <= 50 ? '#d97706' : '#dc2626'">
+                  {{ stats()!.aiErrorRate | number:'1.1-1' }}%
+                </strong>
+              </div>
+              <div class="progress-bar">
+                <div class="fill" [style.width.%]="stats()!.aiErrorRate"
+                     [style.background]="stats()!.aiErrorRate <= 20 ? '#059669' : stats()!.aiErrorRate <= 50 ? '#d97706' : '#dc2626'">
+                </div>
+              </div>
+            </div>
+            <div class="monitor-item">
+              <div class="item-info">
+                <span>Disponibilité Service</span>
+                <span class="status-dot-text">
+                  <span class="dot pulse"></span> En ligne (99.9%)
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="activity-section card-premium">
+        <div class="panel-header">
+          <span class="micro-label">ACTIVITÉ RÉCENTE DES AGENTS</span>
+        </div>
+        <div class="activity-list-modern">
+          @if (recentActivities().length === 0) {
+            <p style="color:var(--text-secondary);padding:1rem 0;text-align:center">Aucune activité récente</p>
+          }
+          @for (item of recentActivities(); track item.id) {
+            <div class="activity-row">
+              <div class="agent-avatar">{{ item.agentName[0] }}</div>
+              <div class="info">
+                <strong>Chèque #{{ item.chequeNumber }}</strong>
+                <span>Traité par {{ item.agentName }} · {{ item.time }}</span>
+              </div>
+              <div class="time">{{ item.time }}</div>
+              <span class="status-pill"
+                    [class.success]="item.status === 'VALIDATED'"
+                    [class.danger]="item.status === 'REJECTED'"
+                    [class.warning]="item.status === 'PENDING'">
+                {{ item.status === 'VALIDATED' ? 'Validé' : item.status === 'REJECTED' ? 'Rejeté' : 'En attente' }}
+              </span>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       ONGLET 2 — MODÈLES PRÉDICTIFS
+       ══════════════════════════════════════════════════════════════════════════ -->
+  @if (activeTab() === 'mining') {
+    <div class="mining-view">
+
+      <!-- KPI strip (données réelles) -->
+      <div class="kpi-strip">
+        <div class="kpi-pill">
+          <span class="kpi-label">Chèques analysés</span>
+          <strong>{{ totalCheques }}</strong>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-label">Score IA moyen</span>
+          <strong [style.color]="getScoreColor(scoreIa)">{{ scoreIa | number:'1.1-1' }}%</strong>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-label">Taux d'erreur IA</span>
+          <strong [style.color]="getScoreColor(100 - tauxErreur)">{{ tauxErreur | number:'1.1-1' }}%</strong>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-label">Alertes fraude</span>
+          <strong [style.color]="nbFraudes > 0 ? '#EF4444' : '#10B981'">{{ nbFraudes }}</strong>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-label">Script ML</span>
+          <code>analytics_models.py</code>
+        </div>
+      </div>
+
+      <!-- Charts Chart.js (données réelles) -->
+      <div class="charts-grid">
+        <div class="chart-card span-2">
+          <div class="chart-header">
+            <span class="micro-label">VOLUME 7 JOURS — VALIDÉS / REJETÉS / EN COURS (données réelles)</span>
+          </div>
+          <div class="chart-wrap"><canvas #volumeCanvas></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="micro-label">RÉPARTITION STATUTS</span>
+          </div>
+          <div class="chart-wrap donut-wrap"><canvas #statusCanvas></canvas></div>
+        </div>
+        <div class="chart-card span-3">
+          <div class="chart-header">
+            <span class="micro-label">DISTRIBUTION SCORES IA — MODÈLE GAUSSIEN (basé sur précision réelle)</span>
+            <span class="threshold-badge">Seuil pipeline : 0.85</span>
+          </div>
+          <div class="chart-wrap"><canvas #scoreCanvas></canvas></div>
+        </div>
+      </div>
+
+      <!-- Cartes modèles ML -->
+      <div class="section-header-label">
+        <span class="micro-label">MODÈLES ENTRAÎNÉS — analytics/analytics_models.py</span>
+        <span class="file-badge">pip install scikit-learn pandas psycopg2-binary joblib</span>
+      </div>
+      <div class="models-grid">
+        @for (m of miningModels; track m.title) {
+          <div class="model-card" [style.border-color]="m.border" [style.background]="m.bg">
+            <div class="model-top">
+              <span class="model-icon">{{ m.icon }}</span>
+              <div class="model-meta">
+                <h3 [style.color]="m.color">{{ m.title }}</h3>
+                <span class="algo-badge" [style.color]="m.color" [style.background]="m.border">{{ m.algo }}</span>
+              </div>
+              <div class="score-ring" [style.--ring-color]="m.color">
+                <span>{{ m.auc }}%</span>
+                <small>AUC</small>
+              </div>
+            </div>
+            <div class="model-metrics">
+              <div class="metric">
+                <span>Précision</span>
+                <div class="mini-bar"><div class="mini-fill" [style.width.%]="m.precision" [style.background]="m.color"></div></div>
+                <strong>{{ m.precision }}%</strong>
+              </div>
+              <div class="metric">
+                <span>Rappel</span>
+                <div class="mini-bar"><div class="mini-fill" [style.width.%]="m.recall" [style.background]="m.color"></div></div>
+                <strong>{{ m.recall }}%</strong>
+              </div>
+            </div>
+            <div class="model-features">
+              <span class="feat-label">Features :</span>
+              <div class="features-list">
+                @for (f of m.features; track f) { <span class="feat-tag">{{ f }}</span> }
+              </div>
+            </div>
+            <div class="model-output">
+              <span class="output-label">Output :</span> {{ m.output }}
+            </div>
+            <div class="model-note">{{ m.note }}</div>
+            <code class="model-file">./models/{{ m.file }}</code>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       ONGLET 3 — JOURNAL D'ACTIVITÉ
+       ══════════════════════════════════════════════════════════════════════════ -->
+  @if (activeTab() === 'journal') {
+    <div class="journal-view">
+
+      <!-- KPI strip -->
+      <div class="kpi-strip">
+        <div class="kpi-pill">
+          <span class="kpi-label">Actions totales</span>
+          <strong>{{ recentActivities().length }}</strong>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-label">Validés</span>
+          <strong style="color:#10B981">{{ journalCount('VALIDATED') }}</strong>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-label">Rejetés</span>
+          <strong style="color:#EF4444">{{ journalCount('REJECTED') }}</strong>
+        </div>
+        <div class="kpi-pill">
+          <span class="kpi-label">En attente</span>
+          <strong style="color:#F59E0B">{{ journalCount('PENDING') }}</strong>
+        </div>
+      </div>
+
+      <!-- Filtres -->
+      <div class="journal-filters">
+        <button class="filter-btn" [class.active]="journalFilter() === 'ALL'"       (click)="journalFilter.set('ALL')">Tous</button>
+        <button class="filter-btn" [class.active]="journalFilter() === 'VALIDATED'" (click)="journalFilter.set('VALIDATED')">
+          <span class="dot-v"></span> Validés
+        </button>
+        <button class="filter-btn" [class.active]="journalFilter() === 'REJECTED'"  (click)="journalFilter.set('REJECTED')">
+          <span class="dot-r"></span> Rejetés
+        </button>
+        <button class="filter-btn" [class.active]="journalFilter() === 'PENDING'"   (click)="journalFilter.set('PENDING')">
+          <span class="dot-p"></span> En attente
+        </button>
+      </div>
+
+      <section class="card-section">
+        <div class="section-header-label">
+          <span class="micro-label">HISTORIQUE DES ACTIONS — AGENTS</span>
+          <span class="file-badge">{{ filteredActivities().length }} entrée(s)</span>
+        </div>
+
+        @if (filteredActivities().length === 0) {
+          <div class="empty-state-alerts">
+            <span style="font-size:2.5rem">📋</span>
+            <p>Aucune activité pour ce filtre</p>
+          </div>
+        } @else {
+          <div class="journal-table">
+            <div class="journal-table-header">
+              <span>Agent</span>
+              <span>N° Chèque</span>
+              <span>Action</span>
+              <span>Horodatage</span>
+              <span>Statut</span>
+            </div>
+            @for (item of filteredActivities(); track item.id) {
+              <div class="journal-row">
+                <div class="journal-agent">
+                  <div class="agent-avatar-sm">{{ item.agentName[0] }}</div>
+                  <span>{{ item.agentName }}</span>
+                </div>
+                <code>#{{ item.chequeNumber }}</code>
+                <span class="journal-action"
+                      [style.color]="item.status === 'VALIDATED' ? '#059669' : item.status === 'REJECTED' ? '#DC2626' : '#D97706'">
+                  {{ item.status === 'VALIDATED' ? 'Validation' : item.status === 'REJECTED' ? 'Rejet' : 'Mise en attente' }}
+                </span>
+                <span class="journal-time">{{ item.time }}</span>
+                <span class="status-pill"
+                      [class.success]="item.status === 'VALIDATED'"
+                      [class.danger]="item.status === 'REJECTED'"
+                      [class.warning]="item.status === 'PENDING'">
+                  {{ item.status === 'VALIDATED' ? 'Validé' : item.status === 'REJECTED' ? 'Rejeté' : 'En attente' }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+    </div>
+  }
+
+</div>

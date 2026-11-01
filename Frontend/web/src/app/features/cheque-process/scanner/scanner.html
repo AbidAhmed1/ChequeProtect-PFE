@@ -1,0 +1,396 @@
+<div class="scanner-page">
+
+  <!-- ── Workflow stepper ─────────────────────── -->
+  <div class="workflow-stepper">
+    <div class="wf-step wf-active">
+      <div class="wf-circle">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+      </div>
+      <div class="wf-info">
+        <span class="wf-num">Étape 1</span>
+        <span class="wf-name">Numérisation</span>
+      </div>
+    </div>
+
+    <div class="wf-connector"></div>
+
+    <div class="wf-step">
+      <div class="wf-circle">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      </div>
+      <div class="wf-info">
+        <span class="wf-num">Étape 2</span>
+        <span class="wf-name">Vérification OCR</span>
+      </div>
+    </div>
+
+    <div class="wf-connector"></div>
+
+    <div class="wf-step">
+      <div class="wf-circle">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="wf-info">
+        <span class="wf-num">Étape 3</span>
+        <span class="wf-name">Validation</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── IDLE: Two-column layout ──────────────── -->
+  <ng-container *ngIf="currentStep() === 'idle'">
+    <div class="scanner-body">
+
+      <!-- Left: Upload zone + stats -->
+      <div class="scanner-main">
+
+        <!-- OCR status badge -->
+        <div class="dz-status-badge" style="align-self:flex-start">
+          <span class="dz-status-dot"></span>
+          Moteur OCR opérationnel
+        </div>
+
+        <!-- Two required dropzones -->
+        <div class="dropzone-row">
+
+          <!-- Recto -->
+          <div class="upload-zone"
+            [class.drag-over]="isDraggingRecto()"
+            [class.has-file]="rectoFile() !== null"
+            (dragover)="onDragOverRecto($event)"
+            (dragleave)="onDragLeaveRecto($event)"
+            (drop)="onDropRecto($event)"
+            (click)="rectoInput.click()">
+            <span class="uz-required-label">Recto <span class="uz-star">*</span></span>
+
+            @if (rectoFile()) {
+              <div class="uz-preview">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--success)">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="uz-filename">{{ rectoFile()!.name }}</span>
+                <button class="uz-remove" (click)="removeRecto($event)" title="Supprimer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+            } @else {
+              <div class="uz-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                  <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+              </div>
+              <p class="uz-hint">Face avant du chèque</p>
+              <div class="dz-formats">
+                <span class="dz-fmt">JPG</span>
+                <span class="dz-fmt">PNG</span>
+                <span class="dz-fmt">PDF</span>
+              </div>
+            }
+
+            <input #rectoInput type="file" accept="image/*,application/pdf" style="display:none" (change)="onRectoSelected($event)" />
+          </div>
+
+          <!-- Verso -->
+          <div class="upload-zone"
+            [class.drag-over]="isDraggingVerso()"
+            [class.has-file]="versoFile() !== null"
+            (dragover)="onDragOverVerso($event)"
+            (dragleave)="onDragLeaveVerso($event)"
+            (drop)="onDropVerso($event)"
+            (click)="versoInput.click()">
+            <span class="uz-required-label">Verso <span class="uz-star">*</span></span>
+
+            @if (versoFile()) {
+              <div class="uz-preview">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--success)">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="uz-filename">{{ versoFile()!.name }}</span>
+                <button class="uz-remove" (click)="removeVerso($event)" title="Supprimer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+            } @else {
+              <div class="uz-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                  <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+              </div>
+              <p class="uz-hint">Face arrière du chèque</p>
+              <div class="dz-formats">
+                <span class="dz-fmt">JPG</span>
+                <span class="dz-fmt">PNG</span>
+                <span class="dz-fmt">PDF</span>
+              </div>
+            }
+
+            <input #versoInput type="file" accept="image/*,application/pdf" style="display:none" (change)="onVersoSelected($event)" />
+          </div>
+
+        </div>
+
+        <!-- Submit button -->
+        <button class="btn btn-primary btn-launch"
+          [disabled]="!canSubmit()"
+          (click)="launchAnalysis()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Lancer l'analyse IA
+        </button>
+
+        <!-- Quick stats bar -->
+        <div class="stats-bar">
+          <div class="sbar-item">
+            <span class="sbar-val">{{ processedTodayCount() }}</span>
+            <span class="sbar-lbl">Traités aujourd'hui</span>
+          </div>
+          <div class="sbar-sep"></div>
+          <div class="sbar-item">
+            <span class="sbar-val">98.7%</span>
+            <span class="sbar-lbl">Précision OCR</span>
+          </div>
+          <div class="sbar-sep"></div>
+          <div class="sbar-item">
+            <span class="sbar-val">~1.7s</span>
+            <span class="sbar-lbl">Temps moyen</span>
+          </div>
+          <div class="sbar-sep"></div>
+          <div class="sbar-item">
+            <div style="display:flex;align-items:center;gap:.4rem">
+              <span class="sbar-online-dot"></span>
+              <span class="sbar-val sbar-val-green">EN LIGNE</span>
+            </div>
+            <span class="sbar-lbl">Statut système</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Mobile pending cheques panel -->
+      <div class="scanner-panel">
+        <div class="panel-header">
+          <div class="panel-title-row">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);flex-shrink:0">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+            <span class="panel-title">Importés mobile</span>
+            @if (pendingCheques().length > 0) {
+              <span class="panel-badge">{{ pendingCheques().length }}</span>
+            }
+          </div>
+          <button class="panel-refresh-btn"
+            (click)="loadPendingCheques()"
+            [disabled]="isLoadingPending()"
+            title="Actualiser">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+              [style.animation]="isLoadingPending() ? 'spin .8s linear infinite' : 'none'">
+              <polyline points="23 4 23 10 17 10"/>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Barre de recherche par date -->
+        <div class="panel-search">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="panel-search-icon">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8"  y1="2" x2="8"  y2="6"/>
+            <line x1="3"  y1="10" x2="21" y2="10"/>
+          </svg>
+          <input
+            type="date"
+            class="panel-search-input"
+            [ngModel]="filterDate()"
+            (ngModelChange)="filterDate.set($event)"
+            title="Filtrer par date de dépôt" />
+          @if (filterDate()) {
+            <button class="panel-search-clear" (click)="filterDate.set('')" title="Effacer">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6"  y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          }
+        </div>
+
+        <!-- Loading skeleton -->
+        @if (isLoadingPending()) {
+          <div class="panel-skeleton">
+            <div class="skel-item" *ngFor="let i of [1,2,3]">
+              <div class="skel-icon"></div>
+              <div class="skel-lines">
+                <div class="skel-line skel-line-lg"></div>
+                <div class="skel-line skel-line-sm"></div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Empty state -->
+        @if (!isLoadingPending() && filteredCheques().length === 0) {
+          <div class="panel-empty">
+            <div class="panel-empty-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                <line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+            </div>
+            <p class="panel-empty-text">
+              @if (filterDate()) { Aucun dépôt ce jour } @else { Aucun chèque en attente }
+            </p>
+            <p class="panel-empty-sub">
+              @if (filterDate()) { Essayez une autre date } @else { Les dépôts mobiles apparaîtront ici }
+            </p>
+          </div>
+        }
+
+        <!-- Cheque list -->
+        @if (!isLoadingPending() && filteredCheques().length > 0) {
+          <div class="panel-list">
+            @for (cheque of filteredCheques(); track cheque.id) {
+              <button class="panel-item"
+                (click)="openMobileCheque(cheque)"
+                [disabled]="openingChequeId() !== null"
+                [class.pi-loading]="openingChequeId() === cheque.id">
+                <div class="pi-icon">
+                  @if (openingChequeId() === cheque.id) {
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin .8s linear infinite">
+                      <polyline points="23 4 23 10 17 10"/>
+                      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                    </svg>
+                  } @else {
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                      <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                  }
+                </div>
+                <div class="pi-body">
+                  <span class="pi-name">
+                    Réf. {{ cheque.id.slice(0, 8).toUpperCase() }}
+                  </span>
+                  <span class="pi-meta">
+                    <span>{{ cheque.uploadDate | date:'dd/MM/yyyy' }}</span>
+                    <span class="pi-dot">·</span>
+                    <span>{{ cheque.uploadDate | date:'HH:mm' }}</span>
+                  </span>
+                </div>
+                <div class="pi-arrow">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </div>
+              </button>
+            }
+          </div>
+        }
+
+        <div class="panel-footer">
+          Actualisation toutes les 30 s
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Note réglementaire BCT ── -->
+    <div class="legal-note">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span>
+        <strong>Rappel réglementaire BCT :</strong>
+        Un chèque dont la date de remplissage dépasse <strong>21 jours</strong> est considéré périmé et doit être rejeté conformément à la nouvelle réglementation en vigueur.
+      </span>
+    </div>
+
+  </ng-container>
+
+  <!-- ── PROCESSING state ─────────────────────── -->
+  <div class="process-wrap" *ngIf="currentStep() !== 'idle'">
+    <div class="process-card card">
+
+      <div class="process-header">
+        <div class="process-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+          </svg>
+        </div>
+        <div class="process-text">
+          <p class="process-sub">
+            <ng-container *ngIf="currentStep() === 'scanning'">Étape 1 / 2 — Capture du document</ng-container>
+            <ng-container *ngIf="currentStep() === 'analyzing'">Étape 2 / 2 — Analyse IA</ng-container>
+            <ng-container *ngIf="currentStep() === 'completed'">Terminé — Redirection...</ng-container>
+          </p>
+          <h3 class="process-title">
+            <ng-container *ngIf="currentStep() === 'scanning'">Numérisation en cours</ng-container>
+            <ng-container *ngIf="currentStep() === 'analyzing'">Extraction OCR en cours</ng-container>
+            <ng-container *ngIf="currentStep() === 'completed'">Traitement réussi</ng-container>
+          </h3>
+        </div>
+        <span class="process-pct">{{ scanProgress() }}%</span>
+      </div>
+
+      <div class="scan-frame">
+        <div class="scan-corners">
+          <span class="corner tl"></span>
+          <span class="corner tr"></span>
+          <span class="corner bl"></span>
+          <span class="corner br"></span>
+        </div>
+        <div class="scan-line" *ngIf="currentStep() !== 'completed'"></div>
+        <div class="scan-body">
+          <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".75" stroke-linecap="round" stroke-linejoin="round" style="opacity:.2">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+            <line x1="1" y1="10" x2="23" y2="10"/>
+          </svg>
+        </div>
+        <div class="scan-success" *ngIf="currentStep() === 'completed'">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="progress" style="margin-bottom:.25rem">
+        <div class="progress-fill" [style.width.%]="scanProgress()"></div>
+      </div>
+
+      <div class="pipeline">
+        <div class="pp-step"
+          [class.pp-active]="currentStep() === 'scanning'"
+          [class.pp-done]="currentStep() === 'analyzing' || currentStep() === 'completed'">
+          <div class="pp-dot"></div>
+          <span>Capture</span>
+        </div>
+        <div class="pp-line"></div>
+        <div class="pp-step"
+          [class.pp-active]="currentStep() === 'analyzing'"
+          [class.pp-done]="currentStep() === 'completed'">
+          <div class="pp-dot"></div>
+          <span>Analyse OCR</span>
+        </div>
+        <div class="pp-line"></div>
+        <div class="pp-step" [class.pp-active]="currentStep() === 'completed'">
+          <div class="pp-dot"></div>
+          <span>Vérification</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

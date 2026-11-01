@@ -1,0 +1,240 @@
+<div class="usermgmt-page">
+  <div class="page-header">
+    <div>
+      <p class="section-label">Administration</p>
+      <h1 class="page-title">Gestion des utilisateurs</h1>
+      <p class="page-subtitle">{{ users().length }} compte(s) au total</p>
+    </div>
+    <div style="display:flex;gap:.75rem">
+      <button class="btn btn-secondary" (click)="refreshUsers()" title="Rafraîchir la liste">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Rafraîchir
+      </button>
+      <button class="btn btn-primary" (click)="openAddModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nouvel utilisateur
+      </button>
+    </div>
+  </div>
+
+  <!-- Alerte réinitialisation mot de passe -->
+  <div *ngIf="resetRequestsCount() > 0" class="reset-alert-banner" role="alert">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span>
+      <strong>{{ resetRequestsCount() }} demande(s) de réinitialisation de mot de passe</strong>
+      en attente. Les utilisateurs concernés sont marqués ci-dessous.
+    </span>
+  </div>
+
+  <!-- Statistiques -->
+  <div class="user-stats-grid">
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <div class="stat-icon-wrap blue" style="font-size:.9rem;font-weight:700">A</div>
+        <div>
+          <p class="stat-label">Agents</p>
+          <p class="stat-value">{{ agentsCount() }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <div class="stat-icon-wrap" style="background:#f5f3ff;color:#7c3aed;font-size:.9rem;font-weight:700">S</div>
+        <div>
+          <p class="stat-label">Superviseurs</p>
+          <p class="stat-value">{{ adminsCount() }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <div class="stat-icon-wrap green" style="font-size:.9rem;font-weight:700">✓</div>
+        <div>
+          <p class="stat-label">Total</p>
+          <p class="stat-value">{{ users().length }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table card -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border)">
+      <div style="position:relative;max-width:320px">
+        <svg style="position:absolute;left:.875rem;top:50%;transform:translateY(-50%);color:var(--text-muted)" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input
+          id="user-search"
+          class="input-modern"
+          style="padding-left:2.6rem"
+          placeholder="Rechercher un utilisateur..."
+          [value]="searchTerm()"
+          (input)="onSearchChange($event)"
+          aria-label="Rechercher un utilisateur"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+
+    <div *ngIf="isLoading()" role="status" style="padding:3rem;text-align:center">
+      <div class="spinner-dark" style="margin:0 auto"></div>
+    </div>
+
+    <div class="table-wrapper" *ngIf="!isLoading()">
+      <table class="data-table" aria-label="Liste des utilisateurs">
+        <thead>
+          <tr>
+            <th scope="col">Utilisateur</th>
+            <th scope="col">Rôle</th>
+            <th scope="col">Statut</th>
+            <th scope="col" style="text-align:right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers()" [class.row-reset-request]="user.resetPasswordRequested">
+            <td>
+              <div style="display:flex;align-items:center;gap:.875rem">
+                <div class="avatar" [style.background]="user.role === 'ADMIN' ? '#7c3aed' : '#2563eb'">
+                  {{ getInitials(user) }}
+                </div>
+                <div>
+                  <div style="display:flex;align-items:center;gap:.5rem">
+                    <span style="font-weight:500">{{ user.firstName }} {{ user.lastName }}</span>
+                    <span *ngIf="user.resetPasswordRequested" class="reset-badge" title="Demande de réinitialisation MDP en attente">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                      MDP requis
+                    </span>
+                  </div>
+                  <div style="font-size:.78rem;color:var(--text-muted)">{{ user.email }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge" [class.badge-primary]="user.role === 'ADMIN'" [class.badge-success]="user.role === 'AGENT'">
+                {{ user.role }}
+              </span>
+            </td>
+            <td>
+              <span class="badge" [class.badge-success]="user.isActive" [class.badge-danger]="!user.isActive">
+                <span class="status-dot-sm" [style.background]="user.isActive ? 'var(--success)' : 'var(--danger)'"></span>
+                {{ user.isActive ? 'Actif' : 'Bloqué' }}
+              </span>
+            </td>
+            <td>
+              <div style="display:flex;justify-content:flex-end;gap:.5rem">
+                <button class="btn btn-secondary btn-sm" (click)="openEditModal(user)"
+                        [attr.aria-label]="'Modifier ' + user.firstName + ' ' + user.lastName">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Modifier
+                </button>
+                <button class="btn btn-sm"
+                  [class.btn-danger]="user.isActive"
+                  [class.btn-success]="!user.isActive"
+                  (click)="toggleStatus(user)"
+                  [attr.aria-label]="(user.isActive ? 'Bloquer ' : 'Activer ') + user.firstName">
+                  {{ user.isActive ? 'Bloquer' : 'Activer' }}
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredUsers().length === 0">
+            <td colspan="4" style="text-align:center;padding:3rem;color:var(--text-muted)">
+              Aucun utilisateur trouvé
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Ajouter / Modifier -->
+  <div class="modal-backdrop" *ngIf="isModalOpen()"
+       role="dialog" aria-modal="true" aria-labelledby="user-modal-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="user-modal-title">{{ modalMode() === 'EDIT' ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur' }}</h2>
+        <button class="btn-icon" (click)="closeModal()" aria-label="Fermer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Alerte demande reset MDP (mode EDIT) -->
+        <div *ngIf="modalMode() === 'EDIT' && selectedUser()?.resetPasswordRequested"
+             style="background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.875rem 1rem;margin-bottom:1.25rem;display:flex;gap:.6rem;align-items:flex-start;font-size:.875rem;color:#92400e">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Cet utilisateur a demandé une réinitialisation de mot de passe. Définissez un nouveau mot de passe ci-dessous pour résoudre cette demande.</span>
+        </div>
+
+        <!-- Succès -->
+        <div *ngIf="submitSuccess()"
+             style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.875rem 1rem;margin-bottom:1rem;color:#166534;font-size:.875rem;white-space:pre-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.4rem;vertical-align:middle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          {{ submitSuccess() }}
+        </div>
+
+        <!-- Erreur -->
+        <div *ngIf="submitError()"
+             style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:.875rem 1rem;margin-bottom:1rem;color:#991b1b;font-size:.875rem">
+          {{ submitError() }}
+        </div>
+
+        <form [formGroup]="userForm" class="modal-form">
+          <!-- Nom / Prénom -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="form-field">
+              <label>Prénom</label>
+              <input class="input-modern" formControlName="firstName" placeholder="Prénom" />
+              <div class="field-error" *ngIf="userForm.get('firstName')?.touched && userForm.get('firstName')?.invalid">Prénom requis</div>
+            </div>
+            <div class="form-field">
+              <label>Nom</label>
+              <input class="input-modern" formControlName="lastName" placeholder="Nom" />
+              <div class="field-error" *ngIf="userForm.get('lastName')?.touched && userForm.get('lastName')?.invalid">Nom requis</div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-field" style="margin-top:1rem">
+            <label>Adresse e-mail</label>
+            <input class="input-modern" formControlName="email" type="email" placeholder="email@banque.tn" />
+            <div class="field-error" *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid">Adresse e-mail invalide</div>
+          </div>
+
+          <!-- Rôle -->
+          <div class="form-field" style="margin-top:1rem">
+            <label>Rôle</label>
+            <select class="input-modern" formControlName="role">
+              <option value="AGENT">Agent bancaire</option>
+              <option value="ADMIN">Administrateur</option>
+            </select>
+          </div>
+
+          <!-- Mot de passe (EDIT seulement) -->
+          <ng-container *ngIf="modalMode() === 'EDIT'">
+            <div class="form-field" style="margin-top:1rem">
+              <label>
+                Nouveau mot de passe
+                <span style="font-weight:400;color:var(--text-muted);font-size:.8rem">(laisser vide pour ne pas modifier)</span>
+              </label>
+              <input class="input-modern" formControlName="newPassword" type="password" placeholder="Minimum 8 caractères" autocomplete="new-password" />
+            </div>
+          </ng-container>
+
+          <!-- Info ADD mode : MDP auto-envoyé par email -->
+          <div *ngIf="modalMode() === 'ADD'"
+               style="margin-top:1rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.75rem 1rem;font-size:.82rem;color:#1e40af;display:flex;gap:.5rem;align-items:center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Un mot de passe sécurisé sera auto-généré et envoyé par e-mail à l'adresse saisie.
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Annuler</button>
+        <button class="btn btn-primary" (click)="onSubmit()" [disabled]="userForm.invalid || isSubmitting()">
+          <span class="spinner" *ngIf="isSubmitting()"></span>
+          {{ modalMode() === 'EDIT' ? 'Enregistrer' : 'Créer l\'utilisateur' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
